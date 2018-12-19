@@ -8,11 +8,13 @@ README
 
 
 
-RunIUPred2 
+
+
+### RunIUPred2 
 ----------
   This script is used to generate intrinsic structural disorder predictions for proteins stored in a MySQL database. The results for each protein are uploaded to the same MySQL table they were extracted from
   
-#### Dependencies
+##### Dependencies
 The user will need to run the script with Python3 with the following modules:
 
 	- BioPython: https://anaconda.org/conda-forge/biopython
