@@ -30,7 +30,7 @@ FullPipeline.py is a command-line based python script that does the following:
 
 ## Word of Caution!
 
-Once this script starts running in full with the supplied species list, it takes approximately two weeks to finish. Be *really* sure that everything in the pipeline is functioning before starting. 
+Once this script starts running in full with the supplied species list, it takes approximately three weeks to finish. Be *really* sure that everything in the pipeline is functioning before starting. 
 
 There is an option on line 156 that allows the user to run only ten genes per species to ensure each step of the pipeline is functioning before a full run. This should be removed before executing the script for entire genomes.
 
