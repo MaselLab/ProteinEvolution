@@ -10,7 +10,8 @@ This repository is used to store all scripts designed to process and produce met
 - Amino acid composition
  
  The scripts are listed below in alphabetical order. All scripts are stored in their own subdirectory with a readme for ease-of-use.
- -----------
+
+-----------
 
 ## RunIUPred2 
 -----
