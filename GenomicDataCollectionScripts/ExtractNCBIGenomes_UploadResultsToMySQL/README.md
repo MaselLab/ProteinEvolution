@@ -1,4 +1,8 @@
 
+# ExtractNCBIGenomes_UploadResultsToMySQL
+
+----------------------------------------------------------------------
+
 FullPipeline.py is a command-line based python script that does the following:
 
    1) Extracts coding sequences from the NCBI databases
@@ -22,17 +26,17 @@ FullPipeline.py is a command-line based python script that does the following:
 
    5) Uploads data to a MySQL database
 
-################################################################################
-Word of Caution!
+----------------------------------------------------------------------
+
+## Word of Caution!
 
 Once this script starts running in full with the supplied species list, it takes approximately two weeks to finish. Be *really* sure that everything in the pipeline is functioning before starting. 
 
 There is an option on line 156 that allows the user to run only ten genes per species to ensure each step of the pipeline is functioning before a full run. This should be removed before executing the script for entire genomes.
 
+----------------------------------------------------------------------
 
-
-################################################################################
-Dependencies: 
+## Dependencies: 
 
 	Local installation of InterProScan
 
@@ -46,8 +50,7 @@ Zsuzsanna Dosztányi, Veronika Csizmók, Péter Tompa and István Simon
 J. Mol. Biol. (2005) 347, 827-839.
 
 
-################################################################################
-
+----------------------------------------------------------------------
 Python modules required:
 
 	mysql.connector, Biopython
