@@ -3,11 +3,11 @@ README
 # ProteinSequenceMetricsScripts
 ---------------------------------------------------------------------------------------
 
-This repository is used to store all scripts that are used to process and produce metrics for protein sequences. These metrics include (but are not limited to) predictions for: 
- - Intrinsic structural disorder
- - Aggregation propensity
- - Clustering and dispersion
- - Amino acid composition
+This repository is used to store all scripts designed to process and produce metrics for protein sequences. These metrics include (but are not limited to) predictions for: 
+ 	- Intrinsic structural disorder
+ 	- Aggregation propensity
+	- Clustering and dispersion
+ 	- Amino acid composition
  
  The scripts are listed below in alphabetical order. All scripts are stored in their own subdirectory with a readme for ease-of-use.
  -----------
