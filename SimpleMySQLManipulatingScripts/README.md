@@ -1,6 +1,6 @@
 
 
-# README: SimpleMySQLManipulatingScripts
+# SimpleMySQLManipulatingScripts
 --------------------------------------
 
 
