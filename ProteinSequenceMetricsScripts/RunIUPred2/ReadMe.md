@@ -1,11 +1,10 @@
-ReadMe:
 
-RunIUPred2
+# RunIUPred2
 ----------
 
---------------------------- #
-This script is designed to: #
---------------------------- #
+
+## This script is designed to: 
+
 
 	1) Extract protein sequences from a MySQL database
 	2) Run the disorder predictor IUPred2 on each protein sequence
@@ -14,9 +13,9 @@ This script is designed to: #
 
 
 
---------------------------- #
-       Dependencies:        #
---------------------------- #
+
+## Dependencies:
+
 
 The user will need to run the script with Python3 with the following modules:
 
