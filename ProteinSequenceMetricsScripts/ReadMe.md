@@ -9,8 +9,19 @@ This repository is used to store all scripts designed to process and produce met
 - Amino acid composition
  
  The scripts are listed below in alphabetical order. All scripts are stored in their own subdirectory with a readme for ease-of-use.
-
 -----------
+
+
+## CalculateMeanPfamISDOverAllSpecies
+-----
+
+This script is used to calculate the mean ISD for each Pfam in the database PFAMphylostratigraphy. It uses two databases to do this, specifically:
+
+1) EnsemblGenomes_Metrics_Complete
+2) NCBIGenomes_Metrics_Complete
+
+For each row in these datatables, the script pulls the Pfam UID and the domain ISD value associated with it and stored all values in a large dictionary. After every row has been processed, the script calculates mean and variance of each Pfam. These results are uploaded to the data table PfamUIDsTable_EnsemblAndNCBI. These values are not differentiated by species.
+
 
 ## RunIUPred2_IntrinsicDisorderPrediction
 -----
