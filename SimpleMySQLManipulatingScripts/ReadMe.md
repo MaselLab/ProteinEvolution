@@ -9,7 +9,7 @@ The MySQL database PFAMphylostratigraphy contains fairly massive data tables. Th
 This repository contains scripts that are designed to perform these simple tasks.
 
 
-## BackupTable.py
+## BackupMySQLDataTable.py
 --------------
 This script is written using python3 and is intended to be used with very large data tables that cannot be backed up using more conventional methods. For example, the data table on MySQL in the database PFAMphylostratigraphy called NCBIGenomes_Protein_Complete has ~seven-million entries and cannot be backed up using the copy command in Navicat or the DUPLICATE SQL command.
 
