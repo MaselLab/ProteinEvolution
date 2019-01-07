@@ -15,12 +15,12 @@ This script is written using python3 and is intended to be used with very large 
 
 This script takes as input the following:
 
-  - [] Database - This is the name of the database where the data table being backed up is located
-  - [] User - The username to access the mysql database
-  - [] Host - This is the IP address to access mysql
-  - [] Password - The user's password to access the mysql database
-  - [] TableToBeBackedUp - This is table the user is backing up
-  - [] NewTableName - This is the name of the table that will be created
+  - [ ] Database - This is the name of the database where the data table being backed up is located
+  - [ ] User - The username to access the mysql database
+  - [ ] Host - This is the IP address to access mysql
+  - [ ] Password - The user's password to access the mysql database
+  - [ ] TableToBeBackedUp - This is table the user is backing up
+  - [ ] NewTableName - This is the name of the table that will be created
   
 Once running, the script performs a check to make sure a table with the new table name doesn't already exist. This is to prevent the inadvertent overwriting of data. If a table with that name is found, the script notfies the user and shuts down. Otherwise, it proceeds.
 
