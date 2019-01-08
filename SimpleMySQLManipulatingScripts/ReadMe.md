@@ -3,12 +3,32 @@
 # SimpleMySQLManipulatingScripts
 --------------------------------------
 
-
 The MySQL database PFAMphylostratigraphy contains fairly massive data tables. This makes updating, transferring, and backing up tables complicated and, in some cases, impossible using MySQL GUIs such as Navicat.
 
-This repository contains scripts that are designed to perform these simple tasks.
+This repository contains scripts that are designed to perform these simple tasks. 
+
+This ReadMe is set up to give an overview of all the scripts contained in this repository. All scripts are listed below in alphabetical order.
 
 **Note: if a script is written in Python, it is likely necessary to acquire the mysql.connector module to be able to run. This can be easily installed from the command line with conda using the command found [here](https://anaconda.org/anaconda/mysql-connector-python). To be able to use conda, the user will need to have [anaconda3](https://www.anaconda.com/download/) installed.**
+
+### AddIndexToMySQLTable.py
+--------------
+This script's function is to add an index to a MySQL table for a preexisting column. This is a really good idea to do for large tables where the user wishes to extract/upload entries based on values not associated with the table's primary key. Examples of this include:
+
+   - Downloading a single species from a large, multi-species database by specifying species UID or species name
+   - Uploading entries based on a key from another database. For example, in the PFAMphylostratigraphy databases, there are protein data tables that have their own keys as well as listing the coding table keys. If the user were to perform an analysis on a coding sequence and try to update the protein table without indexing the coding table column in the protein database, the upload process would take a very, very long time. 
+
+Indexes can be added in Navicat by choosing the "design table" option, but this can be overly-slow and cumbersome for particularly large databases. This script will allow the user to add an index while letting it run in the background.
+
+The script takes the following user-provided input:
+
+   1) Database   : The name of the MySQL database where the relevant table is stored
+   2) User       : The username to access MySQL
+   3) Host       : The IP address of the MySQL database
+   4) Password   : The password to access MySQL
+   5) DataTable  : The table the user wants to add an index to
+   6) ColumnName : The column the user wants to add the index to
+
 
 
 ### BackupMySQLDataTable.py
