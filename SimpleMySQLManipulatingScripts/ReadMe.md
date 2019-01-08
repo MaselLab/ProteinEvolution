@@ -24,10 +24,10 @@ The script takes the following user-provided input:
 
    1) Database   : The name of the MySQL database where the relevant table is stored
    2) User       : The username to access MySQL
-   3) Host       : The IP address of the MySQL database
+   3) Host       : The IP address to access MySQL
    4) Password   : The password to access MySQL
-   5) DataTable  : The table the user wants to add an index to
-   6) ColumnName : The column the user wants to add the index to
+   5) DataTable  : The table where the user wants to add an index
+   6) ColumnName : The column where the user wants to add the index
 
 
 
@@ -38,13 +38,13 @@ This script is written using python3 and is intended to be used with very large 
 This script takes as input the following:
 
   - [ ] Database - This is the name of the database where the data table being backed up is located
-  - [ ] User - The username to access the mysql database
-  - [ ] Host - This is the IP address to access mysql
-  - [ ] Password - The user's password to access the mysql database
-  - [ ] TableToBeBackedUp - This is table the user is backing up
-  - [ ] NewTableName - This is the name of the table that will be created
+  - [ ] User - The username to access MySQL
+  - [ ] Host - The IP address to access MySQL
+  - [ ] Password - User's password to access MySQL
+  - [ ] TableToBeBackedUp - This is the table the user is backing up
+  - [ ] NewTableName - This is the name of the table that will be created as the backup table
   
-Once running, the script performs a check to make sure a table with the new table name doesn't already exist. This is to prevent the inadvertent overwriting of data. If a table with that name is found, the script notfies the user and shuts down. Otherwise, it proceeds.
+Once running, the script performs a check to make sure a table with the new table name doesn't already exist. This is to prevent the inadvertent overwriting of data.
 
 The script backs up by pulling the entries from the source table one-by-one and inserting them into the new table. It commits these entries in batches of 1,000. 
 
