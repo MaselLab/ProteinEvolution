@@ -1,6 +1,6 @@
 
 
-# SimpleMySQLManipulatingScripts
+# Simple MySQL Manipulating Scripts
 --------------------------------------
 
 The MySQL database PFAMphylostratigraphy contains fairly massive data tables. This makes updating, transferring, and backing up tables complicated and, in some cases, impossible using MySQL GUIs such as Navicat.
