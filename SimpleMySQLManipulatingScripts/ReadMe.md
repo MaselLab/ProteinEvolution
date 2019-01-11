@@ -9,7 +9,7 @@ This repository contains scripts that are designed to perform these simple tasks
 
 This ReadMe is set up to give an overview of all the scripts contained in this repository. All scripts are listed below in alphabetical order.
 
-In terms of editing tables and figuring out the computational/memory costs of operations and the consequences of making table alterations, I find [this](https://dev.mysql.com/doc/refman/5.6/en/innodb-online-ddl-operations.html) to be a good guide. For small SQL tables, oftentimes performing operations such as adding a column or changing the data type is quick and easy. However, it may or not be apparent to the user that it requires the table to be rebuilt, so performing this operation on gigantic datasets can take quite a long time!
+In terms of editing tables and figuring out the computational/memory costs of operations and the consequences of making table alterations, I find [this](https://dev.mysql.com/doc/refman/5.6/en/innodb-online-ddl-operations.html) to be a good guide. For small SQL tables, oftentimes performing operations such as adding a column or changing the data type is quick and easy. However, it may or not be apparent to the user that it requires the table to be rebuilt, so performing this operation on gigantic datasets can take quite a long time and/or be impossible!
 
 **Note: if a script is written in Python, it is likely necessary to acquire the mysql.connector module to be able to run. This can be easily installed from the command line with conda using the command found [here](https://anaconda.org/anaconda/mysql-connector-python). To be able to use conda, the user will need to have [anaconda3](https://www.anaconda.com/download/) installed.**
 
