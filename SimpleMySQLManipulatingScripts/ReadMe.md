@@ -13,7 +13,7 @@ In terms of editing tables and figuring out the computational/memory costs of op
 
 If you need any guidance with respect to executing MySQL commands, [this is a good resource](https://www.w3schools.com/sql/sql_delete.asp).
 
-**Note: if a script is written in Python, it is likely necessary to acquire the mysql.connector module to be able to run. This can be easily installed from the command line with conda using the command found [here](https://anaconda.org/anaconda/mysql-connector-python). To be able to use conda, the user will need to have [anaconda3](https://www.anaconda.com/download/) installed.**
+**Note: if a script is written in Python, it is likely necessary to acquire the mysql.connector module to be able to run. This can be easily installed from the command line with conda using the command found [here](https://anaconda.org/anaconda/mysql-connector-python). To be able to use conda (and Python3 on Fusion), the user will need to have [anaconda3](https://www.anaconda.com/download/) installed.**
 
 # Scripts in this Repository
 -----------------------------
