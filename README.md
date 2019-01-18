@@ -33,3 +33,19 @@ For fish in wheelbarrow:
 
 Tells us a lot more about what’s going on.
 
+----------
+
+
+## Directories in this Repository
+
+### Genomic Data Collection Scripts
+This directory contains all scripts that are used in collecting sequence data and their annotations, e.g. the script used in collecting the genomes from the NCBI databases and assigning Pfam annotations to them for the Templeton grant. 
+
+### Phylostratigraphy Dating Species and Pfams
+All scripts and files involved in dating domains/genes go here. A master phylogenetic tree is kept here in Newick Format for all species used in the work for the Templeton grant.
+
+### Protein Sequence Metrics Scripts
+All scripts used in generating metrics for proteins and their domains go in this directory. This directory is broken into two subdirectories: one for full protein analysis, one for domain analysis. Metrics include, but are not limited to, clustering, intrinsic structural disorder, aggregation propensity, and amino acid composition.
+
+### Simple MySQL Manipulating Scripts
+All scripts that are used to perform basic operations on MySQL databases go here. These include scripts that create backups of tables, add indices to table rows, and delete specific entries. 
