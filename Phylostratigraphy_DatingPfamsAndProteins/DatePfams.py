@@ -41,9 +41,9 @@ algorithm [2]: Used when only one species is present
 
 
 # MySQL connection information
-Database = 'PFAMphylostratigraphy'
+Database = ''
 User = ''
-Host = '127.0.0.1'
+Host = ''
 Password = ''
 
 # Data table where Pfams are stored
