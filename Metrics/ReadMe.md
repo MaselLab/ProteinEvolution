@@ -1,12 +1,13 @@
 
-# ProteinSequenceMetricsScripts
+# Metrics
 ---------------------------------------------------------------------------------------
 
-This repository is used to store all scripts designed to process and produce metrics for protein sequences. These metrics include (but are not limited to) predictions for: 
+This repository is used to store all scripts designed to process and produce metrics for protein sequences and genomes. These metrics include (but are not limited to) predictions for: 
 - Intrinsic structural disorder
 - Aggregation propensity
 - Clustering and dispersion
 - Amino acid composition
+- Codon Adaptation Index
  
  The scripts are listed below in alphabetical order.
  
