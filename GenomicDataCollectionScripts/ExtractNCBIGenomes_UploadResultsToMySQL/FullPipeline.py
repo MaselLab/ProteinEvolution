@@ -3,6 +3,7 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 import os, sys, json, csv, re, string, ftputil, mysql.connector, datetime
 
+#There is a bug somewhere in this code that uploads multiple copies of a single protein. This needs to be fixed
 
 '''
 This script does the following:
