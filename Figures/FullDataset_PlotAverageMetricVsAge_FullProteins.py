@@ -12,16 +12,16 @@ Date   : February 1, 2019
 
 
 TO RUN: 
-        <python3 command> PlotAverageMetricVsAge_FullProteins.py --MetricOption
+        python3 <filename.py> --Metric
 
 Choose metrics option from below or type --options
 
 
 The purpose of this script is to plot the means and standard errors of various protein metrics vs. the age of that protein.
 
-The metrics determined for each protein are for that entire protein and not for any specific domains contained in that protein. 
+The metrics determined for each protein are for that entire protein and not for any specific domains contained within it. 
 
-There are a variety of metrics that can be plotted. The metrics is specified by the user as a command-line argument. They are the following:
+There are a variety of metrics that can be plotted. The desired metric is specified by the user as a command-line argument. They are the following:
 
    1) --ISD : The mean ISD predicted by IUPred 2
    2) --DensityOfAPRs : The number of aggregation-prone regions divided by the length of the protein calculated using the output of TANGO
