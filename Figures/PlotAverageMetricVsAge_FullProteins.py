@@ -4,10 +4,18 @@ import numpy as np
 matplotlib.use('agg')
 import matplotlib.pyplot as plt
 
+
 '''
 Author : Sara Willis
 Date   : February 1, 2019
 -------------------------
+
+
+TO RUN: 
+        <python3 command> PlotAverageMetricVsAge_FullProteins.py --MetricOption
+
+Choose metrics option from below or type --options
+
 
 The purpose of this script is to plot the means and standard errors of various protein metrics vs. the age of that protein.
 
@@ -61,7 +69,11 @@ MetricOptions = {'ISD': ['MeanISD_IUPred2_WithCys', 'Mean ISD (IUPred 2)'],
 # The program begins by trying to determine which metric the user would like plotted vs. time
 # If the metric is located, the program proceeds. Otherwise, the program exits and notifies the
 # user that there was an issue
-Metric = sys.argv[1]
+try:
+    Metric = sys.argv[1]
+except:
+    print('\n------------------\n\nInvalid format\n\nTo generated figures, a metric must be selected\n\nTo run, use the following format:\n\n' + '\x1b[6;30;43m' + '<python3 command> <script name>.py --[metric option]'+'\x1b[0m'+'\n\nFor help, use --options\n\n------------------\n')
+    sys.exit(0)
 
 if Metric == '--options':
     print('\n\nThe following options are available to plot vs. age:\n\n--ISD\n--DensityOfAPRs\n--DensityOfAAsInAPRs\n--Clustering_Trunc\n--Clustering_AllFrames\n--Length\n\n')
@@ -70,7 +82,8 @@ try:
     MetricsColumn = MetricOptions[Metric.replace('-','')][0]
     MetricsLabel = MetricOptions[Metric.replace('-','')][1]
 except:
-    print('\n\nInvalid metric option selected\nPlease specify a metric\n\nFor help, use --options\n\n')
+    #print('\n\nInvalid metric option selected\n\nPlease use correct format:\n'+'\x1b[6;30;42m' +'<python3 command> ScriptName.py --option\n\n'+'\x1b[0m'+ '\nPlease specify a metric\n\nFor help, use --options\n\n')
+    print('\n\nInvalid metric option selected\n\nPlease specify a valid metric\n\nFor help, use --options\n\n')
     sys.exit(0)
 
 startTime = datetime.datetime.now()
