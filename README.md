@@ -49,3 +49,5 @@ All scripts used in generating metrics for proteins and their domains go in this
 
 ### Simple MySQL Manipulating Scripts
 All scripts that are used to perform basic operations on MySQL databases go here. These include scripts that create backups of tables, add indices to table rows, and delete specific entries. 
+
+
