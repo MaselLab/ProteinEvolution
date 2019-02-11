@@ -1,8 +1,10 @@
-import os, sys, json, csv, mysql.connector, datetime
+import os, sys, json, csv, mysql.connector, datetime,math
+
+
 
 '''
 Author : Sara Willis
-Date   : February 1, 2019
+Date   : February 11, 2019
 --------------------------
 
 The purpose of this file is to determine the codon adaptation indices (CAI) for individual species. This is a metric that describes codon usage patterns. 
@@ -91,6 +93,7 @@ for CodingTable in CodingTables:
     
     for i in range(MinSpeciesUID,MaxSpeciesUID):
         print('Extracting SpeciesUID: %s'%i)
+        sys.stdout.flush()
         totalCodonCount = 0
         # We'll keep dictionaries of all the codons that we count, their RSCU values,
         # and their relative adaptedness values, sorted by which amino acid they
@@ -207,24 +210,36 @@ for CodingTable in CodingTables:
                 for Codon in RSCUTable[AA]:
                     RelativeAdaptedness = RSCUTable[AA][Codon]/MaxRSCU
                     RelativeAdaptednessTable[AA][Codon] = RelativeAdaptedness
-
-            # Finally, we are able to calculate the CAI value
-            
-            # We start by setting the CAI to one
-            CAI = 1
-            # We then go through the raw codon count dictionary and use those values to calculate the CAI (see beginning of script for
-            # details)
+            # Once we have all the relative adaptedness values, we have enough information to calculate the CAI. Because we're
+            # dealing with a *lot* of decimal values and a genometric mean, trying to calculate the CAI without using any sort
+            # of transformation causes issues. For example:
+            #
+            #         - If we take the product of all the relative adaptedness values before taking the 1/L power, the CAI goes to
+            #           zero because there is a minimum float size allowed in Python
+            #         - If we try incorporating the 1/L power each time we take the product, i.e. for each codon, we find the value
+            #           (w_i)^[n/L], where n is the number of times that codon shows up, L is the total number of codons in all coding
+            #           sequences, and w_i is the relative adaptedness value of that codon, then n/L may go to zero because L >> n. Then
+            #           (w_i)^[n/L] --> 1, so all CAI values are ~ 1.
+            #
+            # The easiest way to get around all this is to perform a log transformation, so instead of:
+            #                          CAI = [Product_1^L(w_i)]^(1/L)
+            # We get:
+            #                          CAI = e^[1/L Sum_1^L log(w_i)]
+            #
+            # We'll add the log of each relative adaptedness value to the Log of the CAI to start
+            LogOfCAI = 0
             for AA in RawCount:
                 for Codon in RawCount[AA]:
-                    CodonCount = codonList.count(Codon)
-                    if CodonCount != 0:
-                        # We raise to the power of CodonCount/totalCodonCount rather than (relativeAdaptedness^CodonCount)^(1/L)
-                        # because the latter sometimes forces the value to become so small that it exceeds python's capabilities
-                        # and becomes 1 before it raises it to the power of 1/L, which forces the entire CAI to become 0
-                        CAI = CAI * ((RelativeAdaptednessTable[AA][Codon])**(CodonCount/totalCodonCount))
-            # Once the CAI is found, the result is uploaded to the table in the SQL database
-            UpdateStatement = "UPDATE SpeciesList SET CAI=%s WHERE SpeciesUID = %s"%(CAI,i)
+                    # Here, we're just finding the number of occurrences of each relative adaptedness value, taking the log of w_i, and
+                    # adding it to the total Log of CAI
+                    for k in range(0,RawCount[AA][Codon]):
+                        LogOfCAI += math.log(RelativeAdaptednessTable[AA][Codon])
+            # We divide by the total number of codons in all coding sequences
+            LogOfCAI = (1/totalCodonCount)*LogOfCAI
+            # and we invert the log to get the CAI
+            CAI = math.exp(LogOfCAI)
+            # Once the CAI has been found, we update our species list and move on to the next species
+            UpdateStatement = "UPDATE SpeciesList SET CAI=%s WHERE SpeciesUID=%s"%(CAI,i)
             mycursor.execute(UpdateStatement)
             cnx.commit()
-            print('Updated!\n\n')
 cnx.close()
