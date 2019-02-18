@@ -3,6 +3,9 @@ import numpy as np
 
 
 '''
+Author : Sara Willis
+Date   : February 18, 2019
+
 The purpose of this script is to calculate the GC content for all species in a MySQL database using their coding sequences. The results are then uploaded to be stored with the relevant species
 
 '''
