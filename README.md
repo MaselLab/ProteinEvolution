@@ -50,4 +50,25 @@ All scripts used in generating metrics for proteins and their domains go in this
 ### Simple MySQL Manipulating Scripts
 All scripts that are used to perform basic operations on MySQL databases go here. These include scripts that create backups of tables, add indices to table rows, and delete specific entries. 
 
+---------------
+
+## Dependancies 
+
+### Python3
+This repository contains many scripts that require Python3 to run. Fusion doesn't allow for the global installation of Python3, so the user should download [anaconda3](https://www.anaconda.com/distribution/), unpack/make/configure the files, and then should specify the path to the python3 executable (located in bin) when running code. 
+
+Python3 also has an executable in its bin called conda which allows the user to download python packages from [the anaconda cloud](https://anaconda.org/). Examples of imporant modules that are available to download using conda are the following:
+
+#### [mysql.connector](https://anaconda.org/anaconda/mysql-connector-python)
+Allows user to connect to mysql
+
+#### [ftputil](https://anaconda.org/conda-forge/ftputil)
+Allows user to connect to an online ftp site
+
+#### [matplotlib](https://anaconda.org/conda-forge/matplotlib)
+Package for all your plotting need
+
+#### [datetime](https://anaconda.org/trentonoliphant/datetime)
+Basic time-keeping module
+
 
