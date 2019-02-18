@@ -1,6 +1,9 @@
 import os, json, sys, csv, mysql.connector, datetime
 
 '''
+Author : Sara Willis
+Date   : February 18, 2019
+
 This is a very simple script that's used to delete a specific species from a mysql database using a species UID
 '''
 
