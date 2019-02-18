@@ -59,12 +59,14 @@ The sequences are extracted from a SQL database one species at a time, are then 
 Database = ''
 User = ''
 Host = ''
-Password = ''
+Password =''
 
 # The tables where the coding sequences are stored
 # ** These are stored as a list so that we can iterate through them **
 CodingTables = ['EnsemblGenomes_Coding_Complete', 'NCBIGenomes_Coding_Complete']
 
+# Verbose prints out the progress of the script for the user when set to True
+Verbose = False
 
 
 ####################################################################################
@@ -92,8 +94,9 @@ for CodingTable in CodingTables:
     MinSpeciesUID = mycursor.fetchone()[0]
     
     for i in range(MinSpeciesUID,MaxSpeciesUID):
-        print('Extracting SpeciesUID: %s'%i)
-        sys.stdout.flush()
+        if Verbose == True:
+            print('Extracting SpeciesUID: %s'%i)
+            sys.stdout.flush()
         totalCodonCount = 0
         # We'll keep dictionaries of all the codons that we count, their RSCU values,
         # and their relative adaptedness values, sorted by which amino acid they
