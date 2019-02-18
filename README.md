@@ -71,4 +71,7 @@ Package for all your plotting need
 #### [datetime](https://anaconda.org/trentonoliphant/datetime)
 Basic time-keeping module
 
+#### [biopython](https://anaconda.org/anaconda/biopython)
+This is an excellent tool for bioinformatics and I highly suggest you get it!
+
 
