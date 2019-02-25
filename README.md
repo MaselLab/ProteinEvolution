@@ -74,4 +74,8 @@ Basic time-keeping module
 #### [biopython](https://anaconda.org/anaconda/biopython)
 This is an excellent tool for bioinformatics and I highly suggest you get it!
 
+### R
+There are scripts in this repository that make use of [R](https://www.r-project.org/). 
+
+For any help on installing packages for R on Fusion where you don't have root access, a quick tutorial can be found [here](https://cmdlinetips.com/2012/05/how-to-install-a-r-package-locally-and-load-it-easily/). The best way to get packages to load in this way can be found in the [CRAN package repository](https://cran.r-project.org/web/packages/).
 
