@@ -2,6 +2,8 @@ import math
 from Bio import SeqIO
 
 '''
+Author : Sara Willis
+Date   : Wednesday February 27, 2019
 The purpose of this submodule is to find the heights of the sequence logo of a multiple sequence alignment.
 
 The function accepts a multiple sequence alignment in fasta format as input. Each column in the alignment is used to generate the sequence logo array. This submodule can be used with a change point detection module to find optimal regions to partition a multiple sequence alignment.
