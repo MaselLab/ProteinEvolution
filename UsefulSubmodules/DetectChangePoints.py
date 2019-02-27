@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 
 
 '''
+Author : Sara Willis
+Date   : Wednesday February 27, 2019
+
+
 The purpose of this function is to read in a list of numerical values and output the detected change points associated with that list. For example, if the user wanted to know how to partition a multiple sequence alignment, they could create a bit score list, feed it into this module, and determine where the alignment should be split. The function has three inputs that need to be specified by the user, as well as one optional parameter:
 
  [1] The bit scores list is the first argument in the function and is what is analyzed for change points
