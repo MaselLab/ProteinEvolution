@@ -1,4 +1,9 @@
+
 '''
+Author : Sara Willis
+Date   : Wednesday February 27, 2019
+
+
 The purpose of this function is to check a coding sequence to make sure that it:
 
     1) Starts with a start codon
