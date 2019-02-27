@@ -4,6 +4,8 @@ from Bio.Seq import Seq
 
 
 '''
+Author : Sara Willis
+Data   : Wednesday February 27, 2019
 The purpose of this function is to create a fasta file with sequences designated by the user. The function taskes in three arguments:
 
  1) The identifier for the sequence in the fasta file
