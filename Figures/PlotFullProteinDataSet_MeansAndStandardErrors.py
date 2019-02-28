@@ -10,6 +10,8 @@ Author : Sara Willis
 Date   : February 1, 2019
 -------------------------
 
+* Note -- there is homology group work that's being done that will require this script to be updated
+
 
 TO RUN: 
         python3 <filename.py> --Metric
