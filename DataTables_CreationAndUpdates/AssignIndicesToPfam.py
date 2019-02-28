@@ -2,6 +2,11 @@ import os, json, sys, csv, mysql.connector, datetime, copy
 import numpy as np
 
 '''
+Author : Sara Willis
+Date   : February 11, 2019
+--------------------------
+
+
 In each protein data table in the database PFAMphylostratigraphy, there is one row for for each protein and its associated Pfams. These tables have then been deconstructed to make the DomainMetrics data tables where there is one entry for each protein/pfam combo. What this script does is it gathers the UIDs in the DomainMetrics data tables, associates all the UIDs that belong to a particular protein, and uploads those back into the protein data table. This allows for unique keys that allow the user to go back and forth between data tables without ambiguity.
 
 ============================================================
