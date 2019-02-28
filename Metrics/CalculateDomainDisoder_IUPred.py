@@ -3,6 +3,10 @@ import numpy as np
 
 
 '''
+Author : Sara Willis
+Date   : February 11, 2019
+--------------------------
+
 This script is intended to pull preexisiting raw IUpred scores from a full-protein run from a MySQL data table and to find the mean disorder prediction for each of its Pfam domains. The results get uploaded to a domain data table
 
 To use this script, the IUPred scores should be stored in a database with comma-delimited strings of pfams IDs, their starting and stopping indices, and a list of UIDs associated with those pfam domains in a domain data table
