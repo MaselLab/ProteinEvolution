@@ -5,6 +5,10 @@ from Bio.Seq import Seq
 from multiprocessing import Pool
 
 '''
+Author : Sara Willis
+Date   : February 11, 2019
+--------------------------
+
 This script is used to run IUPred2 on proteins stored in a MySQL database.
 
 **This is a slightly modified version of 'RunIUPred2.py'. This version ONLY deals with the raw IUPred output and doesn't bother with taking means
