@@ -4,6 +4,10 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 
 '''
+Author : Sara Willis
+Date   : February 11, 2019
+--------------------------
+
 This script is intended to pull preexisiting raw Tango scores from a full-protein run from a MySQL data table and to find various aggregation metrics for the pfam domains associated with that protein sequence. The results will then be uploaded to a user-specified MySQL data table. 
 
 To use this script, the Tango scores should be stored in a database with comma-delimited strings of pfams IDs, their starting and stopping indices, and a list of UIDs associated with those pfam domains in a domain data table
