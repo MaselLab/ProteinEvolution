@@ -2,6 +2,12 @@ import os, sys, json, csv, copy, mysql.connector
 from ete3 import Tree
 
 '''
+Author : Sara Willis
+Date   : February 11, 2019
+--------------------------
+
+
+
 The purpose of this script is to assign dates to Pfams in our dataset.
 
 First, in order to aquire the various dates associated with the divergence of all species in our dataset, we uploaded the list of species in our dataset to TimeTree.org. The Newick file was then downloaded.
