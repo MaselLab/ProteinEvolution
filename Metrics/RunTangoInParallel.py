@@ -4,6 +4,10 @@ from Bio import SeqIO
 from Bio.Seq import Seq
 
 '''
+Author : Sara Willis
+Date   : February 11, 2019
+--------------------------
+
 The purpose of this script is to read in protein sequences from a MySQL database and to calculate aggregation metrics for them using the executable Tango. 
 
 This script makes use of the multiprocessing module to run Tango on multiple proteins in the database simultaneously. This allows the script to be run on fairly large datatables in a reasonable period of time. 
