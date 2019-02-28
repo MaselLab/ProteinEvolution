@@ -4,6 +4,11 @@ from Bio import SeqIO
 
 
 '''
+Author : Sara Willis
+Date   : February 11, 2019
+--------------------------
+
+
 This script is used to access the Ensembl databases so that it can extract IDs associated with chloroplast and mitochondrial genes.
 
 This script was written so that mitochondrial and chloroplast genes could be identified in our dataset containing the coding sequences from over 400 genomes. This is in part because mitochondrial and chloroplast genes tend to use alternative coding alphabets. 
