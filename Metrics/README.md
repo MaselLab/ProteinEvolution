@@ -9,10 +9,11 @@ This repository is used to store all scripts designed to process and produce met
 - Amino acid composition
 - Codon Adaptation Index
  
- The scripts are listed below in alphabetical order.
+ The scripts are listed below in alphabetical order, sorted by programming language
  
 -----------
 
+# Python Scripts
 
 ## CalculateCAI_AllSpecies
 This script determines the [codon adaptation indices](https://en.wikipedia.org/wiki/Codon_Adaptation_Index) for all species stored in a MySQL database using their coding sequences and uploads them back into a user-specified data table in MySQL. 
@@ -39,8 +40,7 @@ This script is used to calculate the amino acid composition of protein sequences
 
 The reason there are different scripts for pfam domains vs. full proteins is because there is not yet a table that contains all of the pfam sequences. If this is done, the domain-specific script can be deleted. Until then, it will be retained.
 
-## CalculatePfamDomainAggregation_Tango.py
-
+## CalculatePfamDomainAggregation_Tango
 
 This script is intended to pull preexisiting raw Tango scores from a full-protein run from a MySQL data table and to find various aggregation metrics for the pfam domains associated with that protein sequence. The results will then be uploaded to a user-specified MySQL data table. 
 To use this script, the Tango scores should be stored in a database with comma-delimited strings of pfams IDs, their starting and stopping indices, and a list of UIDs associated with those pfam domains in a domain data table
@@ -59,20 +59,19 @@ The purpose of this script is to calculate the GC content for all species in a M
 **Note 2**: This script can be made more general by defining variables for the data tables in the user-options section. This may be done soon.
 
 
+## GCPercentContent_AllSpecies
 
-## CalculateMeanPfamISDOverAllSpecies
------
-
-This script is used to calculate the mean ISD for each Pfam in the database PFAMphylostratigraphy. It uses two databases to do this, specifically:
-
-1) EnsemblGenomes_Metrics_Complete
-2) NCBIGenomes_Metrics_Complete
-
-For each row in these datatables, the script pulls the Pfam UID and the domain ISD value associated with it and stored all values in a large dictionary. After every row has been processed, the script calculates mean and variance of each Pfam. These results are uploaded to the data table PfamUIDsTable_EnsemblAndNCBI. These values are not differentiated by species.
+The purpose of this script is to calculate the GC content for all species in a MySQL database using their coding sequences. The results are then uploaded to be stored with the relevant species in a species-specific table
 
 
-## RunIUPred2_IntrinsicDisorderPrediction
------
+## JasonsHydrophobicRunLengthFunctions
+
+These are a series of functions written by Jason Bertram to calculate the mean hydrophobic run lengths of amino acid sequences. Inside is also defined a hydrophobicity map -- a dictionary storing the scores associated with each of the amino acids telling the functions which amino acids are assumed to be the most hydrophobic. 
+
+
+
+## RunIUPred2
+
 
   This script is used to generate intrinsic structural disorder predictions for proteins stored in a MySQL database. The results for each protein are uploaded to the same MySQL table they were extracted from
   
@@ -88,4 +87,18 @@ To get Python3, anaconda can be downloaded from: https://www.anaconda.com/downlo
 The user will also need to have the IUPred2 executables. These can be accessed here by filling out a request form: https://iupred2a.elte.hu/download (Select IUPred2A to download)
 
 
+## RunIUPred2_StringOutputOnly
 
+This is very similar to RunIUPred2, but instead only uploads the raw string to the destination table. These two scripts could be merged at some point to make the script RunIUPred2.py much more elegant and versatile.
+
+## RunTangoInParallel
+
+The purpose of this script is to read in protein sequences from a MySQL database and to calculate aggregation metrics for them using the executable Tango. 
+
+This script makes use of the multiprocessing module to run Tango on multiple proteins in the database simultaneously. This allows the script to be run on fairly large datatables in a reasonable period of time. 
+
+# R Scripts
+
+## calculate_normalized_clustering
+
+This script is designed to calculate a normalized index of hydrophobic clustering, similar to Jason's Python script. It adjusts average run length by the expected run length from amino acid composition.
