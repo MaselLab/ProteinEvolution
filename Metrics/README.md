@@ -9,8 +9,29 @@ This repository is used to store all scripts designed to process and produce met
 - Amino acid composition
 - Codon Adaptation Index
  
- The scripts are listed below in alphabetical order, sorted by programming language
+ The scripts are listed in alphabetical order, sorted by programming language
  
+ # Dependencies 
+ 
+ Below are a list of the dependencies that may be required for the scripts included in this repository. 
+### [Python3](https://www.anaconda.com/download/)
+Necessary for a lot of scripts. This does not come preloaded on fusion, so user's of the lab will have to download their own local version
+
+#### [BioPython](https://anaconda.org/conda-forge/biopython)
+Perfect for translating sequences efficiently and reading sequence files (fasta, stockholm, etc...) as well as a host of other functions
+ 
+#### [mysqlconnector](https://pynative.com/install-mysql-connector-python/)
+A great python module that allows users to connect to a MySQL database 
+
+### R
+
+### Miscellaneous Executables
+
+#### [IUPred2](https://iupred2a.elte.hu/download)
+
+#### [Tango](http://tango.switchlab.org/)
+Used for protein aggregation propensity
+
 -----------
 
 # Python Scripts
