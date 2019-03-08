@@ -27,7 +27,22 @@ The output filename is rplot.pdf
 
 
 
+## PlotFullProteinDataSet_BoxAndWhiskers.py
 
+#### TO RUN: 
+```
+python3 <filename.py> --Metric
+```
+
+Choose metrics option from below or type --options
+The purpose of this script is to generate a box-and-whiskers plot of various protein metrics vs. the age of that protein. The heading of the plot will be the p-value associated with the linear model Metric~Age and the linear as well as loess regression lines are plotted as an overlay.
+There are a variety of metrics that can be plotted. The metric is specified by the user as a command-line argument. They are the following:
+   1) --ISD : The mean ISD predicted by IUPred 2
+   2) --DensityOfAPRs : The number of aggregation-prone regions divided by the length of the protein calculated using the output of TANGO
+   3) --DensityOfAAsInAPRs : The number of amino acids located in aggregation-prone regions divided by the length of the protein, calculated using the output of TANGO
+   4) --Clustering_Trunc : The normalized index of dispersion using FILVM as the most hydrophobic amino acids and using one window
+   5) --Clustering_AllFrames: The normalized index of dispersion using FILVM as the most hydrophobic amino acids, calculated using all possible windows
+   6) --Length : The length of the amino acid sequence
 
 
 ## PlotFullProteinDataSet_MeansAndStandardErrors.py
@@ -50,6 +65,25 @@ The metrics that can be selected from are the following
    5) --Clustering_AllFrames: The normalized index of dispersion using FILVM as the most hydrophobic amino acids, calculated using all possible windows
    6) --Length : The length of the amino acid sequence
    
+
+## PlotPfamDataSet_FourSpecies_BoxAndWhiskers.py
+
+#### TO RUN: 
+```
+python3 <filename.py> --Metric
+```
+
+Choose metrics option from below or type --options
+
+The purpose of this script is to plot the means and standard errors of various protein domain metrics vs. the age of that domain. This script is intended to plot four species in a single figure in a 2x2 grid. The default species are Mus Musculus, Drosophila Melanogaster, Saccharomyces Cerevisiae, and Arabidopsis Thaliana. The species are specified by the user in the **User Data** section of the script as a list. This can be modified so the user can plot whichever species they want. To select from a list of species, see SpeciesList in the MySQL data table PFAMphylostratigraphy.
+
+There are a variety of metrics that can be plotted. The metric is specified by the user as a command-line argument. They are the following:
+   1) --ISD : The mean ISD predicted by IUPred 2
+   2) --DensityOfAPRs : The number of aggregation-prone regions divided by the length of the protein calculated using the output of TANGO
+   3) --DensityOfAAsInAPRs : The number of amino acids located in aggregation-prone regions divided by the length of the protein, calculated using the output of TANGO
+   4) --Clustering_Trunc : The normalized index of dispersion using FILVM as the most hydrophobic amino acids and using one window
+   5) --Clustering_AllFrames: The normalized index of dispersion using FILVM as the most hydrophobic amino acids, calculated using all possible windows
+   6) --Length : The length of the amino acid sequence
 
 
 
