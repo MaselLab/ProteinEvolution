@@ -11,6 +11,7 @@ Date   : February 1, 2019
 -------------------------
 
 * Note -- there is homology group work that's being done that will require this script to be updated
+** Update March 8, 2019 -- The homology group work is done. The updates are still required
 
 
 TO RUN: 
