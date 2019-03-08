@@ -374,7 +374,7 @@ for DataTableSource in DataTables:
     mycursor.execute("SELECT "+','.join([UIDColumn,PfamColumn]) + " FROM " + ProteinTable)
 
     if Verbose == True:
-        print('Data Extracted\nTime Taken: %s\nParsing %s Results\n'%(DataTableSource,datetime.datetime.now()-startTime))
+        print('Data Extracted\nTime Taken: %s\nParsing %s Results\n'%(datetime.datetime.now()-startTime,DataTableSource))
         intermediateTime = datetime.datetime.now()
         sys.stdout.flush()
 
