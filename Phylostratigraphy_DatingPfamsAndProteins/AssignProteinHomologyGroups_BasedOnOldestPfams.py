@@ -31,7 +31,7 @@ If A and B are clustering IDs:
 
 We generalize for cases with n clustering ids.
 
-All clustering IDs are stored in the protein metrics data tables.
+All homology IDs are stored in the protein metrics data tables.
 
 '''
 
