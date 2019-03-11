@@ -94,7 +94,7 @@ try:
     # the user is notified and the program exits.
     mycursor.execute("SELECT 1 FROM %s LIMIT 1" %NewTableName)
     print('\n\nThe new table name you have specified already exists!\nPlease choose a valid table name and try again\n\n')
-    sys.exit(0)
+    
     
 except:
     
@@ -167,4 +167,5 @@ except:
     # Once the table is completely copied, the last of the entries are committed
     cnx.commit()
     cnx.close()
+
 
