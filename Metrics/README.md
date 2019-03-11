@@ -118,6 +118,21 @@ The purpose of this script is to read in protein sequences from a MySQL database
 
 This script makes use of the multiprocessing module to run Tango on multiple proteins in the database simultaneously. This allows the script to be run on fairly large datatables in a reasonable period of time. 
 
+## ScrambleSequences_RunTangoInParallel
+
+This script was written with the intention of being used to generated delta Tango scores. It reads in protein sequences from a MySQL database to generate randomly scrambled peptide sequences from those proteins and calculates aggregation metrics for the randomized sequences using the executable Tango. 
+
+The scrambled peptides will be saved with their Tango output scores in a MySQL data table along with the UID that corresponds to the protein the randomized peptide was generated from. The user has the option to generate more than one randomized peptide sequence per protein using the NumberOfScrambledSequences variable in UserOptions. The table where the scrambled peptides and their metrics may or may not exist prior to running this script. If the user wants the script to generate the scrambled peptide table for them, they should set CreateRandomizedPeptideTable to True. A table with the name defined for the variable ScrambledTable in UserOptions will be created with the column names specified for that table (also in UserOptions).
+
+This script makes use of the multiprocessing module to run Tango on multiple proteins in the database simultaneously. This allows the script to be run on fairly large datatables in a reasonable period of time. 
+
+#### Dependencies
+
+The user will need the executable Tango in order for this script to run: http://tango.crg.es/
+The user will also need two non-standard Python modules that can be installed with the conda command:
+   - BioPython       : https://anaconda.org/anaconda/biopython
+   - mysql.connector : https://anaconda.org/anaconda/mysql-connector-python
+
 # R Scripts
 
 ## calculate_normalized_clustering
