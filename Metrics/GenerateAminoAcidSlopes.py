@@ -408,7 +408,7 @@ def About():
     print('{:<17}{:<3}{:<100}'.format('','','When x=true, only includes transmembrane proteins/domains'))
     print('{:<17}{:<3}{:<100}'.format('','','When x=false, only includes proteins/domains predicted to not be transmembrane\n\n'))
     print('Domain Options: invertebrate, vertebrate, plant, fungi\n\n')
-    print('A note about transforming the data:\n===================================\nBecause Box-Cox transforms require values to be greater than zero, if the data are transformed, the value 0.5\nis added to each data point. The reason this is required is because in some cases domains or proteins may be \ntoo short to include all amino acids and so sometimes the percent composition for a particular domain/protein\nhomology group is zero.\n\n\n')
+    print('A note about transforming the data:\n===================================\nBecause Box-Cox transforms require values to be greater than zero, if the data are transformed, the value 0.5\nis added to the numerator of each data point. The reason this is required is because in some cases domains or proteins may be \ntoo short to include all amino acids and so sometimes the percent composition for a particular domain/protein\nhomology group is zero.\n\n\n')
     sys.exit(0)
 
     
