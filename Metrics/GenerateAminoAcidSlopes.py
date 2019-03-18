@@ -473,7 +473,6 @@ def ParseUserOptions(arguments,filename_prefix):
     except:
         Test = False
     print('\u001b[0m\n\n')
-    sys.exit(0)
     return SpeciesUID,Transformed,Kingdom,Transmembrane,Test,filename_prefix
 
 
