@@ -79,7 +79,7 @@ pfam|fullgene    :  (required) pfam or fullgene. Specifies which dataset used to
                        
 metric=<x>       :  (required) Specifies which metric will be plotted
                                                   
-test             :  if included, only extracts first 1000 columns from each data table. For use with testing and debugging
+test             :  if included, only extracts first 1000 rows from each data table. For use with testing and debugging
 
 speciesuid=n     :  Amino acid slopes for species with species UID n (found in SpeciesList MySQL table)
                 
@@ -229,7 +229,7 @@ def About():
     print('\n\n--------------------------------------------- Options ----------------------------------------------\n\n\n')
     print('{:<17}{:<3}{:<100}'.format('pfam|fullgene',':','(required) pfam or fullgene. Specifies which dataset used to generate slopes\n'))
     print('{:<17}{:<3}{:<100}'.format('metric=<x>',':','(required) Specifies which metric will be plotted\n'))
-    print('{:<17}{:<3}{:<100}'.format('test',':','if included, only extracts first 1000 columns from each data table. For use with testing and debugging\n'))
+    print('{:<17}{:<3}{:<100}'.format('test',':','if included, only extracts first 1000 rows from each data table. For use with testing and debugging\n'))
     print('{:<17}{:<3}{:<100}'.format('speciesuid=n',':','Amino acid slopes for species with species UID n (found in SpeciesList MySQL table)\n'))
     print('{:<17}{:<3}{:<100}'.format('kingdom=x',':','Amino acid slopes for designated kingdom \n'))
     print('{:<17}{:<3}{:<100}'.format('transformed',':','Uses Box-Cox transform to normalize dataset before computing slope'))
@@ -407,7 +407,7 @@ def ParseUserOptions(Arguments,filename_prefix):
             print('\n{:<45}{:<5}{:<100}'.format('\u001b[33;1mTest cannot be selected','--','Incompatible with kingdom or species UID specifications'))
             Test = False
         else:
-            print('\n{:<45}{:<5}{:<100}'.format('\u001b[36;1mTest option selected','--','Only extracting first thousand columns from data tables'))
+            print('\n{:<45}{:<5}{:<100}'.format('\u001b[36;1mTest option selected','--','Only extracting first thousand rows from data tables'))
             filename_prefix += '_TEST'
             Test = True
     except:
@@ -697,7 +697,7 @@ def PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AminoAcid
     else:
         os.system('%s %s &>%s'%(RunRCommand,RScriptFilename,ROutputFilename))
 
-    UnwantedFiles = [RScriptFilename, TempDataFrame,'Rplots.pdf',ROutputFilename]
+    UnwantedFiles = [RScriptFilename, TempDataFrameFilename,'Rplots.pdf',ROutputFilename]
     for unwantedFile in UnwantedFiles:
         if os.path.exists(unwantedFile) == True:
             os.remove(unwantedFile)
