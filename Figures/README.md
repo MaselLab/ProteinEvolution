@@ -5,7 +5,7 @@ This repository houses all scripts used to generate figures.
 
 ## PlotMetrics_GenerateSlopes_MetricsVsAge.py
 
-This script is a beast of a script that can do a *lot* and is replacing several disjoint scripts. 
+This is a behemoth of a script that can do a *lot* and is replacing several disjoint scripts. 
 
 Author : Sara Willis
 Date   : March 20, 2019
