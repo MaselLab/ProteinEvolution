@@ -92,9 +92,9 @@ transmembrane=x  :  When not included as an argument, all data points are includ
 aa=<x>           :  Chooses the amino acid(s) to be analyze. For all amino acids, use "all" or leave blank              
                     Otherwise use a comma-delimited string to select a subset. e.g. aa=V,L,F,M
                          
-xlim=xmin,xmax   :  configures the x limits of the R plot.
+xlim=xmin,xmax   :  configures the x limits of the R plot. Must include both xmin and xmax as comma-delimited values to run
                                                              
-ylim=ymin,ymax   :  configures the y limits of the R plot.
+ylim=ymin,ymax   :  configures the y limits of the R plot. Must include both ymin and ymax as comma-delimited values to run
 
                                                             
 -------------
