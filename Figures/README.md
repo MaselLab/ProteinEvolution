@@ -123,6 +123,11 @@ protein/domain length prior to extraction, this is achieved by adding 0.5\length
 
 ## PlotPfamDataSet_FourSpecies_BoxAndWhiskers.py
 
+Author : Sara Willis
+Date   : February 1, 2019
+
+**This program needs to be updated to incorporate various changes to bring it into line with the script BoxAndWhiskersPlots_LinearModelSlopes_MetricsVsAge.py**
+
 #### TO RUN: 
 ```
 python3 <filename.py> --Metric
@@ -144,7 +149,11 @@ There are a variety of metrics that can be plotted. The metric is specified by t
 
 ## SpeciesSpecific_PlotAverageMetricVsAge_PfamOnly.py
 
+
 **This is currently an outdated script. A better option would be to use BoxAndWhiskersPlots_LinearModelSlopes_MetricsVsAge.py for single-species analyses**
+
+Author : Sara Willis
+Date   : February 4, 2019
 
 #### TO RUN:
 ```
