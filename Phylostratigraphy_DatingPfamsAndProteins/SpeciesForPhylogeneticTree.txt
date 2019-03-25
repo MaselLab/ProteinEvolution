@@ -203,7 +203,6 @@ Aspergillus_oryzae
 Aspergillus_terreus
 Fusarium_fujikuroi
 Schizosaccharomyces_pombe
-Ustilago_maydis
 Volvox_carteri
 Acropora_digitifera
 Aedes_albopictus
@@ -463,5 +462,4 @@ Tyto_alba
 Xenopus_laevis
 Zonotrichia_albicollis
 Ursus_arctos
-Dendrobium_catenatum
 Sporisorium_scitamineum
