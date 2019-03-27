@@ -622,6 +622,7 @@ def PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AminoAcid
     RScript = open(RScriptFilename,'w')
     # The R script reads in our dataframe
     RScript.write('df <- read.csv(file = "%s",header = T)\n'%TempDataFrameFilename)
+    RScript.write('library(MASS)\n')
     # We then attach the dataframe and order based on age so that we can perform a loess regression
     RScript.write('attach(df)\n')
     RScript.write('df <- df[order(Age),]\n')
