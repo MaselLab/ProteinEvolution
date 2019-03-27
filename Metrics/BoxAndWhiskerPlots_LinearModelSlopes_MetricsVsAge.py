@@ -99,6 +99,8 @@ xlim=xmin,xmax   :  configures the x limits of the R plot.
                                                              
 ylim=ymin,ymax   :  configures the y limits of the R plot.
 
+slopes           :  generates a csv file with slopes and errors instead of a plot
+
                                                             
 -------------
 Domain Options   :  ISD, DensityOfAPRs, DensityOfAAsInAPRs, Clustering_Trunc, Clustering_AllFrames, Length, AAComp
@@ -242,6 +244,7 @@ def About():
 
     print('{:<17}{:<3}{:<100}'.format('xlim=xmin,xmax',':','configures the x limits of the R plot.\n'))
     print('{:<17}{:<3}{:<100}'.format('ylim=ymin,ymax',':','configures the y limits of the R plot.\n\n'))
+    print('{:<17}{:<3}{:<100}'.format('slopes',':','generates a csv file with slopes and errors instead of a plot.\n\n'))
 
     print('-------------')
     print('{:<17}{:<3}{:<100}'.format('Domain Options',':','ISD, DensityOfAPRs, DensityOfAAsInAPRs, Clustering_Trunc, Clustering_AllFrames, Length, AAComp\n'))
