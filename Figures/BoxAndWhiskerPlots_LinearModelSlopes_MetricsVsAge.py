@@ -741,7 +741,7 @@ def GenerateSlopesFile(HomologyDictionary,Transformed,Metric,filename,AminoAcid)
     # We then need to write an R script so we can perform the necessary linear regressions
     RScriptFilename = 'TempRScript.r'
     RScript = open(RScriptFilename,'w')
-    
+    RScript.write('libary(MASS)\n')
     # R starts by reading in the dataframe
     RScript.write('df <- read.csv(file = "%s",header = T)\n'%TempDataFrameFilename)
     # If a transformation is desired, then R box-cox transforms the data and perfoms a linear regression. Otherwise,
