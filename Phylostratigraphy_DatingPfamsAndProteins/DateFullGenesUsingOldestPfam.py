@@ -3,8 +3,10 @@ import numpy as np
 
 
 '''
-Author: Sara Willis
-Date  : February 1, 2019
+Author       : Sara Willis
+Date         : February 1, 2019
+Updated      : April 5, 2019
+Update Notes : Changed so MySQL column names defined only once allowing for greater ease-of-use
 
 ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- 
 
