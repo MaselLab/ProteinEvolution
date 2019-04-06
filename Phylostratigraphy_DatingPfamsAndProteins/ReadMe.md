@@ -1,6 +1,11 @@
 # Phylostratigraphy_DatingPfamsAndProteins
 
-## AssignProteinHomologyGroups_BasedOnOldestPfams
+## Python Scripts
+
+### AssignProteinHomologyGroups_BasedOnOldestPfams
+
+Author : Sara Willis
+Date   : Thursday March 7, 2019
 
 The purpose of this script is to assign full proteins to homology groups based on the oldest pfams that they are associated with. 
 The way homology groups are assigned to proteins is to cluster proteins based on the PfamUID of the oldest pfam that shows up in that protein. The script would be relatively straight-forward if proteins and their pfams were well behaved and only one pfam with the oldest age showed up. Alas, it is not so. There are cases when there are two more more pfams that show up in a protein sequence that all share the same oldest pfam UID. As a consequence, we need a way to cluster pfams so homology groups can still be assigned to our proteins.
@@ -24,7 +29,12 @@ If A and B are clustering IDs:
 We generalize for cases with n clustering ids. All homology IDs are stored in the protein metrics data tables.
 
 
-# DateFullGenesUsingOldestPfam
+### DateFullGenesUsingOldestPfam
+
+Author       : Sara Willis
+Date         : February 1, 2019
+Updated      : April 5, 2019
+Update Notes : Changed so MySQL column names defined only once allowing for greater ease-of-use
 
 This script is used to date full proteins by assigning the age of the oldest Pfam that it contains. 
 In order to run this script, the following databases are required:
@@ -47,7 +57,10 @@ For each of the source databases (Ensemble and NCBI), the PfamUIDs are extracted
 
 In PFAMphylostratigraphy, the data table PfamUIDsTable_EnsemblAndNCBI contains all PfamUIDs and the ages that have been assigned to them.
 
-# DatePfams
+### DatePfams
+
+Author : Sara Willis
+Date   : February 11, 2019
 
 The purpose of this script is to assign dates to Pfams in our dataset.
 First, in order to aquire the various dates associated with the divergence of all species in our dataset, we uploaded the list of species in our dataset to TimeTree.org. The Newick file was then downloaded.
@@ -68,9 +81,12 @@ algorithm [2]: Used when only one species is present
 
 - The algorithm for this case is much simpler than algorithm [1]. The species is located within the overall tree, the distance (age) is determined using the simple ete3 function node.dist and the age is divided in half. This is the age that is assigned to the Pfam
          
-         
+## Newick Files
+
 # PhylogeneticTree_AllSpecies.nwk
 This is the phylogenetic tree of all species in our data set in Newick (machine readable) format 
+
+# Text Files 
 
 # SpeciesForPhylogeneticTree.txt
 This is the list of species that has been used to generate the phylogenetic tree using [TimeTree](TimeTree.org)
