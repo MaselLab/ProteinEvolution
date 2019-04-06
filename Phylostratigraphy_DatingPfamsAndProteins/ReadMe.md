@@ -83,10 +83,10 @@ algorithm [2]: Used when only one species is present
          
 ## Newick Files
 
-# PhylogeneticTree_AllSpecies.nwk
+### PhylogeneticTree_AllSpecies.nwk
 This is the phylogenetic tree of all species in our data set in Newick (machine readable) format 
 
-# Text Files 
+## Text Files 
 
-# SpeciesForPhylogeneticTree.txt
+### SpeciesForPhylogeneticTree.txt
 This is the list of species that has been used to generate the phylogenetic tree using [TimeTree](TimeTree.org)
