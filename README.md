@@ -38,17 +38,32 @@ Tells us a lot more about what’s going on.
 
 ## Directories in this Repository
 
+### Data Tables Creation and Updates
+These scripts are used to either update existing values in a MySQL table or to insert values into a new table based from an old table. For example, averaging over particular values already stored in a table and saving the average to a new column, creating indices to map between tables, or creating a new table using preexisting rows from an old table.
+
+### Figures 
+Scripts used to generate figures. This is where the massive BoxAndWhiskerPlots_LinearModelSlopes_MetricsVsAge.py script is stored which creates box and whiskers plots as well as csv slope files for the user.
+
 ### Genomic Data Collection Scripts
 This directory contains all scripts that are used in collecting sequence data and their annotations, e.g. the script used in collecting the genomes from the NCBI databases and assigning Pfam annotations to them for the Templeton grant. 
+
+### Linear Models
+Where scripts are stored that run linear models on our data. This is a good repository for R files.
+
+### Metrics
+All scripts that are used to calculate specific metrics go here. These are scripts that do things like run IUPred and Tango, calculate the mean index of dispersion, calculate the CAI of a genome, calculate the GC% content of a genome, calculate the percent amino acid composition of proteins, etc.
 
 ### Phylostratigraphy Dating Species and Pfams
 All scripts and files involved in dating domains/genes go here. A master phylogenetic tree is kept here in Newick Format for all species used in the work for the Templeton grant.
 
-### Protein Sequence Metrics Scripts
-All scripts used in generating metrics for proteins and their domains go in this directory. This directory is broken into two subdirectories: one for full protein analysis, one for domain analysis. Metrics include, but are not limited to, clustering, intrinsic structural disorder, aggregation propensity, and amino acid composition.
+### Sequence Alignments
+Any scripts that generate multiple sequence alignments.
 
 ### Simple MySQL Manipulating Scripts
 All scripts that are used to perform basic operations on MySQL databases go here. These include scripts that create backups of tables, add indices to table rows, and delete specific entries. 
+
+### Useful Submodules
+These are scripts that contain small submodules that are useful for work in Bioinformatics. Used for things like generating fasta files, running InterProScan, calculating the optimal value of lambda for a Box-Cox transform given a dataset, etc.
 
 ---------------
 
