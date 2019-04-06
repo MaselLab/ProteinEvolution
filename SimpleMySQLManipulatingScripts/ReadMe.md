@@ -15,11 +15,13 @@ If you need any guidance with respect to executing MySQL commands, [this is a go
 
 **Note: if a script is written in Python, it is likely necessary to acquire the mysql.connector module to be able to run. This can be easily installed from the command line with conda using the command found [here](https://anaconda.org/anaconda/mysql-connector-python). To be able to use conda (and Python3 on Fusion), the user will need to have [anaconda3](https://www.anaconda.com/download/) installed.**
 
-# Scripts in this Repository
------------------------------
+# Python Scripts
 
 ### AddIndexToMySQLTable.py
---------------
+
+Author : Sara Willis
+Date   : Monday January 7, 2019
+
 This script's function is to add an index to a MySQL table for a preexisting column. This is a really good idea to do for large tables where the user wishes to extract/upload entries based on values not associated with the table's primary key. Examples of this include:
 
    - Downloading a single species from a large, multi-species database by specifying species UID or species name
@@ -36,23 +38,33 @@ The script takes the following user-provided input:
    5) DataTable  : The table where the user wants to add an index
    6) ColumnName : The column where the user wants to add the index
 
+### AddMySQLColumn
+
+Author : Sara Willis
+Date   : March 11, 2019
+
+This script is designed to add a column to a MySQL table. When working with relatively small tables, this can be done using the GUI Navicat. As tables get larger this becomes a more cumbersome because when a column is added, it requires the table be recreated which can take a long time. This script allows Navicat to remain in an unfrozen state while a column is added to a table in the background.
+
+### DeleteSpecies
+
+Author : Sara Willis
+Date   : February 18, 2019
+
+This is a very simple script that's used to delete a specific species from a mysql database using a species UID
+
+### MakeDataTableBackup.py
+
+Author: Sara Willis
+Date  : Monday January 7, 2019
+
+This script is used to make backups of large MySQL data tables that cannot be backed up by more conventional methods
+This script pulls entries from the table that needs to be backed up and inserts them into a target table, committing them in batches of 1000.
+
+-----------------DEPENDENCIES----------------
+
+The user will need the [python module mysql.connector](https://anaconda.org/anaconda/mysql-connector-python) for this script to run 
 
 
-### BackupMySQLDataTable.py
---------------
-This script is written using python3 and is intended to be used with very large data tables that cannot be backed up using more conventional methods. For example, the data table on MySQL in the database PFAMphylostratigraphy called NCBIGenomes_Protein_Complete has ~seven-million entries and cannot be backed up using the copy command in Navicat or the DUPLICATE SQL command.
+-------------------RUNTIME-------------------
 
-This script takes as input the following:
-
-  - [ ] Database - This is the name of the database where the data table being backed up is located
-  - [ ] User - The username to access MySQL
-  - [ ] Host - The IP address to access MySQL
-  - [ ] Password - User's password to access MySQL
-  - [ ] TableToBeBackedUp - This is the table the user is backing up
-  - [ ] NewTableName - This is the name of the table that will be created as the backup table
-  
-Once running, the script performs a check to make sure a table with the new table name doesn't already exist. This is to prevent the inadvertent overwriting of data.
-
-The script backs up by pulling the entries from the source table one-by-one and inserting them into the new table. It commits these entries in batches of 1,000. 
-
-Time: In general, this script uploads and commits entries at a rate of approximately 1,000 entries/second. For a table like NCBIGenomes_Protein_Complete, this amounts to a runtime of roughly 2.5 hours. As a result, the user may wish to run this script with nohup 
+This process can take some time depending on the size of the data table that is being backed up. The user may wish to run this process with nohup. For the table NCBIGenomes_Protein_Complete, this script can take about 2.5 hours to run through.
