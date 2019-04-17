@@ -38,14 +38,22 @@ The script takes the following user-provided input:
    5) DataTable  : The table where the user wants to add an index
    6) ColumnName : The column where the user wants to add the index
 
-### AddMySQLColumn
+### AddMySQLColumn.py
 
 Author : Sara Willis
 Date   : March 11, 2019
 
 This script is designed to add a column to a MySQL table. When working with relatively small tables, this can be done using the GUI Navicat. As tables get larger this becomes a more cumbersome because when a column is added, it requires the table be recreated which can take a long time. This script allows Navicat to remain in an unfrozen state while a column is added to a table in the background.
 
-### DeleteSpecies
+### CalculateSizeOfMySQLTable.py
+
+Author : Sara Willis
+Date   : April 17, 2019
+
+The purpose of this script is to calculate the size of a MySQL datatable in MB for the user. The user should enter their MySQL connection information and the name of the table they want to know the size of under User-Specific Data. The program will then print the size of the table to the terminal 
+
+
+### DeleteSpecies.py
 
 Author : Sara Willis
 Date   : February 18, 2019
