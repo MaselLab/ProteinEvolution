@@ -24,12 +24,12 @@ git pull origin master
 ```
 
 ### ReadMe
-There is a ReadMe associated with each directory in the Github repository. This readme should contain the names of all the scripts in that directory in alphabetical order. The ReadMe file should have the extension .md so GitHub can read the fancy [syntax](https://help.github.com/articles/basic-writing-and-formatting-syntax/) that you can use in Github. The ReadMe should give an overview of what each script does, how to run it, dependencies for the script and how to install them, the inputs, and anything else the user should know to run your code. 
+There is a ReadMe associated with each directory in the Github repository. This readme should contain the names of all the scripts in that directory in alphabetical order. The ReadMe file should have the extension .md so GitHub can read the fancy [syntax](https://help.github.com/articles/basic-writing-and-formatting-syntax/) available. The ReadMe should give an overview of what each script does, how to run it, dependencies for the script and how to install them, the inputs, and anything else the user should know to run your code. 
 
-Individual ReadMe’s may also helpful to submit with each script depending on the complexity of the code. If submitting a ReadMe with your script, here is a [good template](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2) for how to create one.
+Individual ReadMe’s may also helpful to submit with individual scripts depending on the complexity of the code. If submitting a ReadMe with your script, here is a [good template](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2) for how to create one.
 
 ### Commenting Your Code
-Commenting your code is important! This is not just for the sanity of those using your code, this is also for your own sanity. There are a lot of resources out there to help do this effectively, so make use of them! These comments shouldn’t simply restate what the code is doing (which either forces you to recomment the code every time you make an edit, or makes your comments invalid after any change), but should facilitate understanding. 
+Commenting your code is important! This is not just for the sanity of those using your code, this is also for your own. There are a lot of resources out there to help do this effectively, so make use of them! These comments shouldn’t simply restate what the code is doing (which either forces you to recomment the code every time you make an edit, or makes your comments invalid after any change), but should facilitate understanding. 
 
 Another important point is to use descriptive variable names to help your code narrate the story. Code that looks like:
 
@@ -45,9 +45,7 @@ For fish in wheelbarrow:
 	pengin.eat(fish)
 ```
 
-Tells us a lot more about what’s going on.
-
-----------
+is much more informative
 
 
 ## Directories in this Repository
@@ -60,6 +58,9 @@ Scripts used to generate figures. This is where the massive BoxAndWhiskerPlots_L
 
 ### Genomic Data Collection Scripts
 This directory contains all scripts that are used in collecting sequence data and their annotations, e.g. the script used in collecting the genomes from the NCBI databases and assigning Pfam annotations to them for the Templeton grant. 
+
+### HomologyDetection_AbandonedHMMERPipeline
+This directory contains all scripts that were written with the intention of creating homology groups using HMMER. Our initial goal was being able to use HMMER's sensitive hmomology detection algorithms to partition the mouse genome into homology groups with each gene segment being represented exactly once. This pipeline turned out to be far more complex than we had anticipated and so we switched to using Pfam annotations to speed up our research. This pipeline is on hiatus pending a grant proposal.
 
 ### Linear Models
 Where scripts are stored that run linear models on our data. This is a good repository for R files.
