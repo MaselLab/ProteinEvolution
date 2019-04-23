@@ -79,13 +79,13 @@ pfam|fullgene    :  (required) pfam or fullgene. Specifies which dataset used to
                        
 metric=<x>       :  (required) Specifies which metric will be plotted
                                                   
-test             :  if included, only extracts first 1000 rows from each data table. For use with testing and debugging
+test             :  if included, only extracts first 1000 columns from each data table. For use with testing and debugging
 
 speciesuid=n     :  Amino acid slopes for species with species UID n (found in SpeciesList MySQL table)
                 
 kingdom=x        :  Amino acid slopes for designated kingdom 
                                                           
-transformed      :  Uses Box-Cox transform to normalize dataset before computing slope                                  
+transformed      :  Uses a transform to normalize dataset before computing slope                                  
                     By default, if this argument is not included, the data will not be transformed
                      
 transmembrane=x  :  When not included as an argument, all data points are included.                                     
@@ -98,8 +98,6 @@ aa=<x>           :  Chooses the amino acid(s) to be analyze. For all amino acids
 xlim=xmin,xmax   :  configures the x limits of the R plot.
                                                              
 ylim=ymin,ymax   :  configures the y limits of the R plot.
-
-slopes           :  generates a csv file with slopes and errors instead of a plot
 
                                                             
 -------------
@@ -136,10 +134,10 @@ protein/domain length prior to extraction, this is achieved by adding 0.5\length
 
 
 # User's MySQL Connection Information
-Database                      = ''
-User                          = ''
-Host                          = ''
-Password                      = ''
+Database = ''
+User = ''
+Host = ''
+Password = ''
 
 # Where the unique protein UIDs are stored (i.e., where there has been a filtering process
 # reducing the number of transcripts for each gene to 1)
@@ -152,7 +150,7 @@ EnsemblProteinDataTable       = 'Genomes_Multicellular_ProteinMetrics'
 NCBIProteinDataTable          = 'NCBIGenomes_ProteinMetrics_Complete'
 UniqueProteinTableUID         = 'UID'        
 
-AgeColumn                     = 'AgeOfOldestPfam'
+AgeColumn                     = 'AgeOfOldestPfam_LUCA_LECA_Updated'
 FullGeneMetricColumn          = 'MeanISD_IUPred2_WithCys'
 FilterColumn                  = 'PassedIUPredFilters'
 HomologyGroupIDColumn         = 'HomologyGroupID'
@@ -175,7 +173,7 @@ DomainLengthColumn            = 'DomainLength'
 # Pfam UID Table
 PfamUIDTable                  = 'PfamUIDsTable_EnsemblAndNCBI'
 PfamUIDColumn                 = 'PfamUID'
-PfamAgeColumn                 = 'Age_MY'
+PfamAgeColumn                 = 'Age_Oldest_MY'
 
 # Species Table
 SpeciesTable                  = 'SpeciesList'
@@ -200,7 +198,8 @@ MetricOptions = {'isd': ['MeanISD_IUPred2_WithCys', 'Mean ISD'],
                  'densityofaasinaprs': ['DensityOfAAsInAPRs',"Density of AAs in APRs"],
                  'clustering_trunc': ['NormalizedIndexOfDispersion_Trunc_FILVM', 'Clustering'],
                  'clustering_allframes': ['NormalizedIndexOfDispersion_AllPhases_FILVM','Clustering (All Frames, FILVM)'],
-                 'length': ['ProteinLength', 'Protein Length'],
+                 'proteinlength': ['ProteinLength', 'Protein Length'],
+                 'domainlength':[DomainLengthColumn, 'Domain Length'],
                  'aacomp': ['PercentAminoAcidComposition','Percent Amino Acid Composition']}
 
 
@@ -227,29 +226,42 @@ def About():
 
     print('\n\n---------------------------------------------- Usage ----------------------------------------------\n\n\n')
     print('{:<17}{:<3}{:<100}'.format('Usage',':', 'python3 ScriptName.py pfam|fullgene metric=<x> [test] [speciesuid=<n>] [kingdom=<x>] [transformed]'))
-    print('{:<64}{:<3}{:<100}'.format('','', '[transmembrane=<x>] [xlim=xmin,xmax] [ylim=ymin,ymax] [aa=<x>] [slopes]')+'\n')
+    print('{:<64}{:<3}{:<100}'.format('','', '[transmembrane=<x>] [xlim=<xmin,xmax>] [ylim=ymin,ymax] [aa=<x>] [slopes] [lambda[=<x>]]')+'\n')
     print('\n\n--------------------------------------------- Options ----------------------------------------------\n\n\n')
     print('{:<17}{:<3}{:<100}'.format('pfam|fullgene',':','(required) pfam or fullgene. Specifies which dataset used to generate slopes\n'))
     print('{:<17}{:<3}{:<100}'.format('metric=<x>',':','(required) Specifies which metric will be plotted\n'))
-    print('{:<17}{:<3}{:<100}'.format('test',':','if included, only extracts first 1000 rows from each data table. For use with testing and debugging\n'))
-    print('{:<17}{:<3}{:<100}'.format('speciesuid=n',':','Amino acid slopes for species with species UID n (found in SpeciesList MySQL table)\n'))
-    print('{:<17}{:<3}{:<100}'.format('kingdom=x',':','Amino acid slopes for designated kingdom \n'))
+    print('{:<17}{:<3}{:<100}'.format('test',':','if included, only extracts first 1000 columns from each data table. For use'))
+    print('{:<17}{:<3}{:<100}'.format('','','with testing and debugging\n'))
+
+    print('{:<17}{:<3}{:<100}'.format('speciesuid=<n>',':','Amino acid slopes for species with species UID n (found in SpeciesList'))
+    print('{:<17}{:<3}{:<100}'.format('','','MySQL table)\n'))
+
+    print('{:<17}{:<3}{:<100}'.format('kingdom=<x>',':','Amino acid slopes for designated kingdom \n'))
     print('{:<17}{:<3}{:<100}'.format('transformed',':','Uses Box-Cox transform to normalize dataset before computing slope'))
     print('{:<17}{:<3}{:<100}'.format('','','By default, if this argument is not included, the data will not be transformed\n'))
-    print('{:<17}{:<3}{:<100}'.format('transmembrane=x',':','When not included as an argument, all data points are included.'))
+    print('{:<17}{:<3}{:<100}'.format('transmembrane=<x>',':','When not included as an argument, all data points are included.'))
     print('{:<17}{:<3}{:<100}'.format('','','When x=true, only includes transmembrane proteins/domains'))
     print('{:<17}{:<3}{:<100}'.format('','','When x=false, only includes proteins/domains predicted to not be transmembrane\n'))
-    print('{:<17}{:<3}{:<100}'.format('aa=<x>',':','Chooses the amino acid(s) to be analyze. For all amino acids, use "all" or leave blank'))
-    print('{:<17}{:<3}{:<100}'.format('','','Otherwise use a comma-delimited string to select a subset. e.g. aa=V,L,F,M\n'))
+    print('{:<17}{:<3}{:<100}'.format('aa=<x>',':','Chooses the amino acid(s) to be analyze. For all amino acids, use "all" or leave'))
+    print('{:<17}{:<3}{:<100}'.format('','','blank. Otherwise use a comma-delimited string to select a subset. e.g. aa=V,L,F,M\n'))
 
-    print('{:<17}{:<3}{:<100}'.format('xlim=xmin,xmax',':','configures the x limits of the R plot.\n'))
-    print('{:<17}{:<3}{:<100}'.format('ylim=ymin,ymax',':','configures the y limits of the R plot.\n\n'))
-    print('{:<17}{:<3}{:<100}'.format('slopes',':','generates a csv file with slopes and errors instead of a plot.\n\n'))
+    print('{:<17}{:<3}{:<100}'.format('xlim=<xmin,xmax>',':','configures the x limits of the R plot.\n'))
+    print('{:<17}{:<3}{:<100}'.format('ylim=<ymin,ymax>',':','configures the y limits of the R plot.\n'))
+    
+    print('{:<17}{:<3}{:<100}'.format('lambda[=<x>]',':','Including the argument lambda writes to a file the value used to transform'))
+    print('{:<17}{:<3}{:<100}'.format('','','the data. This only works if the user has selected the "slopes" option. If the'))
+    print('{:<17}{:<3}{:<100}'.format('','','user includes a value, then the script uses that value to transform the data instead of'))
+    print('{:<17}{:<3}{:<100}'.format('','','finding the optimal value.\n\n'))
+
+
+
+
 
     print('-------------')
     print('{:<17}{:<3}{:<100}'.format('Domain Options',':','ISD, DensityOfAPRs, DensityOfAAsInAPRs, Clustering_Trunc, Clustering_AllFrames, Length, AAComp\n'))
     print('{:<17}{:<3}{:<100}'.format('Kingdom Options',':','invertebrate, vertebrate, plant, fungi\n\n'))
-    print('{:<17}{:<3}{:<100}'.format('Metric Options',':','ISD, DensityOfAPRs, DensityOfAAsInAPRs, Length, AAComp\n\n'))
+    print('{:<17}{:<3}{:<100}'.format('Metric Options',':','ISD, DensityOfAPRs, DensityOfAAsInAPRs, Length, AAComp,Clustering_Trunc, Clustering_AllFrames\n\n'))
+    
     print('---------------------------------------- Data Transformation ---------------------------------------\n\n\n')
     print("A note about transforming the data:\n\nBecause Box-Cox transforms require values to be greater than zero, if the data are transformed, the value 0.5\nis added to each data point. The reason this is required is because in some cases domains or proteins may be \ntoo short to include all amino acids and so sometimes the percent composition for a particular domain/protein\nhomology group is zero. If a particular metric is dependent on the length of the protein (i.e. Density of APRs\nor AA Composition) 0.5 is added to the numerator. Because the extracted metrics have all been divided by the\nprotein/domain length prior to extraction, this is achieved by adding 0.5\length to the metric\n\n")
     print('------------------------------------------- Dependencies -------------------------------------------\n\n\n')
@@ -322,6 +334,10 @@ def ParseUserOptions(Arguments,filename_prefix):
     # The program must have a metric specified to run, otherwise it exits with an error.
     try:
         Metric = arguments['metric']
+        if Metric == 'length' and SequenceType == 'fullgene':
+            Metric = 'proteinlength'
+        if Metric == 'length' and SequenceType == 'pfam':
+            Metric = 'domainlength'
         MetricColumn = MetricOptions[Metric][0]
         MetricLabel = MetricOptions[Metric][1]
         filename_prefix += '_%s'%Metric
@@ -426,10 +442,41 @@ def ParseUserOptions(Arguments,filename_prefix):
     except:
         Slopes = False
         print('\n{:<45}{:<5}{:<100}'.format('\u001b[36;1mGenerating figures','--','Program will produce figure of %s vs. Time. No slope file will be generated'%MetricOptions[Metric][1]))
+    try:
+        Exit = False
+        Lambda = arguments['lambda']
+        if Lambda != True:
+            try:
+                Lambda = float(Lambda)
+                print('\n{:<45}{:<5}{:<100}'.format('\u001b[36;1mLambda value specified','--','Transforming dataset using lambda=%s. Adding Transformed Option.'%Lambda))
+                Transformed = True
+                
+
+            except:
+                print('\n{:<45}{:<5}{:<100}'.format('\u001b[31mInvalid use of lambda','--','Please enter a float or use option "lambda" without "=" to get optimal values\n\n'))
+                Exit = True
+                sys.exit(0)
+        else:
+            if Slopes == True and Transformed == True:
+                print('\n{:<45}{:<5}{:<100}'.format('\u001b[36;1mLambda specified','--','Writing optimal lambda values to csv file'))
+            else:
+                print('\n{:<45}{:<5}{:<100}'.format('\u001b[33;1mLambda option invalid','--','Will only write Lambda to csv file if data are transformed and the argument "slopes" is specified'))
+                Lambda = False
+    except:
+        if Exit == True:
+            print('\u001b[0m\n\n')
+
+            sys.exit(0)
+
+        Lambda = False
+        print('\n{:<45}{:<5}{:<100}'.format('\u001b[33;1mNo lambda option specified','',''))
+
+                
+
 
     print('\u001b[0m\n\n')
     print('\n\n\n##########################################################################################\n\n\n\n')
-    return SequenceType,SpeciesUID,Transformed,Kingdom,Transmembrane,Test,Metric,AminoAcidSelection,filename_prefix,RXLim,RYLim,Slopes
+    return SequenceType,SpeciesUID,Transformed,Kingdom,Transmembrane,Test,Metric,AminoAcidSelection,filename_prefix,RXLim,RYLim,Slopes,Lambda
 
 
 # -------------------------------------------------------------------------------------------------------------------
@@ -592,7 +639,7 @@ This function allows the user to generate a pdf plot in R. The command Rscript i
 '''
 
 
-def PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AminoAcid=None):
+def PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AminoAcid,Lambda):
 
     # A temporary file is created for R to read. There is a row for each homology group (pfam or full protein)
     # with the average metric score associated with that homology group and the age of that homology group
@@ -620,9 +667,9 @@ def PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AminoAcid
     # Once the dataframe is assembled, we need to write an R script to run a linear model on the data
     RScriptFilename = 'TempRScript.r'
     RScript = open(RScriptFilename,'w')
+    RScript.write('library(MASS)\n')
     # The R script reads in our dataframe
     RScript.write('df <- read.csv(file = "%s",header = T)\n'%TempDataFrameFilename)
-    RScript.write('library(MASS)\n')
     # We then attach the dataframe and order based on age so that we can perform a loess regression
     RScript.write('attach(df)\n')
     RScript.write('df <- df[order(Age),]\n')
@@ -631,8 +678,11 @@ def PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AminoAcid
     # values
     if Transformed == True:
         RScript.write('bc <- boxcox(df$Metric~1, lambda = seq(.1,.7,0.01))\n')
-        # The script selects the optimal value to transform the data with 
-        RScript.write('lambda <- bc$x[which.max(bc$y)]\n')
+        # The script selects the optimal value to transform the data with
+        if type(Lambda) == float:
+            RScript.write('lambda <- %s\n'%Lambda)
+        else:
+            RScript.write('lambda <- bc$x[which.max(bc$y)]\n')
         RScript.write('bc.transform <- function(x,L){(x^L-1)/L}\n')
         RScript.write('bc.backtransform <- function(y,L){(L*y+1)^(1/L)}\n')
         RScript.write('Metric.transform <- bc.transform(df$Metric,lambda)\n')
@@ -700,7 +750,6 @@ def PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AminoAcid
         os.system('%s %s'%(RunRCommand,RScriptFilename))
     else:
         os.system('%s %s &>%s'%(RunRCommand,RScriptFilename,ROutputFilename))
-
     UnwantedFiles = [RScriptFilename, TempDataFrameFilename,'Rplots.pdf',ROutputFilename]
     for unwantedFile in UnwantedFiles:
         if os.path.exists(unwantedFile) == True:
@@ -716,12 +765,14 @@ opens a file with the append function and adds to it if more than one metric is 
 if multiple amino acid slopes are being found 
 
 '''
-def GenerateSlopesFile(HomologyDictionary,Transformed,Metric,filename,AminoAcid):
-
+def GenerateSlopesFile(HomologyDictionary,Transformed,Metric,filename,AminoAcid,Lambda):
     AminoAcidSlopesFile = open(filename,'a')
     # If the file is empty, then it needs a header. Otherwise, only the raw data will be added
     if os.stat(filename).st_size ==0:
-        AminoAcidSlopesFile.write('AminoAcid,Slope,Error\n')        
+        if Lambda != True:
+            AminoAcidSlopesFile.write('AminoAcid,Slope,Error\n')
+        else:
+            AminoAcidSlopesFile.write('AminoAcid,Slope,Error,OptimalLambda,MinLambdaConfidence,MaxLambdaConfidence\n')
     # A temporary dataframe needs to be created so R can read it in
     TempDataFrameFilename = 'TempDataFrame.csv'
     DataFrameForR = open(TempDataFrameFilename,'w')
@@ -741,14 +792,21 @@ def GenerateSlopesFile(HomologyDictionary,Transformed,Metric,filename,AminoAcid)
     # We then need to write an R script so we can perform the necessary linear regressions
     RScriptFilename = 'TempRScript.r'
     RScript = open(RScriptFilename,'w')
-    RScript.write('libary(MASS)\n')
+    
     # R starts by reading in the dataframe
     RScript.write('df <- read.csv(file = "%s",header = T)\n'%TempDataFrameFilename)
+    RScript.write('library(MASS)\n')
     # If a transformation is desired, then R box-cox transforms the data and perfoms a linear regression. Otherwise,
     # a linear regression is performed on untransformed data
     if Transformed == True:
         RScript.write('bc <- boxcox(df$Metric~1, lambda = seq(.1,.7,0.01))\n')
-        RScript.write('lambda <- bc$x[which.max(bc$y)]\n')
+        if type(Lambda) == float:
+            RScript.write('lambda <- %s\n'%Lambda)
+        else:
+            RScript.write('lambda <- bc$x[which.max(bc$y)]\n')
+            RScript.write('lambdaInterval <- range(bc$x[bc$y > max(bc$y) -1/2*qchisq(.95,1)])\n')
+            if Lambda == True:
+                RScript.write('sprintf("%s %s %s",lambda , min(lambdaInterval), max(lambdaInterval))\n')
         RScript.write('bc.transform <- function(x,L){(x^L-1)/L}\n')
         RScript.write('bc.backtransform <- function(y,L){(L*y+1)^(1/L)}\n')
         RScript.write('Metric.transform <- bc.transform(df$Metric,lambda)\n')
@@ -770,9 +828,14 @@ def GenerateSlopesFile(HomologyDictionary,Transformed,Metric,filename,AminoAcid)
         for row in reader:
             if len(row) != 0:
                 rowContents = [i for i in row[0].split(' ') if i != '']
+                if rowContents[0] == '[1]':
+                    OptimalLambda, MinLambda, MaxLambda = ['%.2f'%float(i.replace('"','')) for i in rowContents[1:4]]
                 if rowContents[0] == 'df$Age':
                     Slope, Error = rowContents[1:3]
-                    AminoAcidSlopesFile.write('%s,%s,%s\n'%(AminoAcid,Slope,Error))
+                    if Lambda == True:
+                        AminoAcidSlopesFile.write('%s,%s,%s,%s,%s,%s\n'%(AminoAcid,Slope,Error,OptimalLambda,MinLambda,MaxLambda))
+                    else:
+                        AminoAcidSlopesFile.write('%s,%s,%s\n'%(AminoAcid,Slope,Error))
     AminoAcidSlopesFile.close()
     # The program then cleans up after itself
     UnwantedFiles = [ROutputFilename,RScriptFilename,TempDataFrameFilename,'Rplots.pdf']
@@ -802,12 +865,14 @@ mycursor = cnx.cursor(buffered = True)
 filename_prefix = 'MetricVsTime'
 
 # The user's input is parsed so the program knows how to run
-SequenceType,SpeciesUID,Transformed,Kingdom,Transmembrane,Test,Metric,AminoAcidSelection,filename,RXLim,RYLim,Slopes = ParseUserOptions(sys.argv[1:],filename_prefix)
+SequenceType,SpeciesUID,Transformed,Kingdom,Transmembrane,Test,Metric,AminoAcidSelection,filename,RXLim,RYLim,Slopes,Lambda = ParseUserOptions(sys.argv[1:],filename_prefix)
+
 
 
 # The MySQL extraction statements are somewhat complicated so they are generated systematically with their own
 # function
 extractionStatements = ConfigureExtractionStatement(SequenceType,Kingdom,SpeciesUID,Test,Metric)
+
 
 # We need to extract our data from multiple databases, so we'll store results all extracted results
 if Verbose == True:
@@ -845,10 +910,10 @@ for AA in AminoAcidSelection:
             else:
                 print('Creating Plot')
                 
-        filename += '_%s.pdf'%AA
-        PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AA)
+        FinalFilename = filename + '_%s.pdf'%AA
+        PlotInR(HomologyDictionary,Transformed,Metric,FinalFilename,RXLim,RYLim,AA,Lambda)
     # If slopes is True, then we generate a csv file with the slopes and standard errors of the metrics we're investigating
     else:
-        GenerateSlopesFile(HomologyDictionary,Transformed,Metric,filename,AA)
+        GenerateSlopesFile(HomologyDictionary,Transformed,Metric,filename,AA,Lambda)
         
 print('Script Complete!\nTime Taken: %s'%(datetime.datetime.now()-start_time))
