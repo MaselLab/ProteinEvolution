@@ -85,7 +85,7 @@ speciesuid=n     :  Amino acid slopes for species with species UID n (found in S
                 
 kingdom=x        :  Amino acid slopes for designated kingdom 
                                                           
-transformed      :  Uses a transform to normalize dataset before computing slope                                  
+transformed      :  Uses Box-Cox transform to normalize dataset before computing slope                                  
                     By default, if this argument is not included, the data will not be transformed
                      
 transmembrane=x  :  When not included as an argument, all data points are included.                                     
@@ -584,26 +584,12 @@ def CreateHomologyDictionary(MySQLResults,Transmembrane,Transformed,MetricOption
                         # The age of each group is stored 
                         HomologyDictionary[HomologyGroupID] = {'Age':Age}
                         for i in range(0,len(AminoAcids)):
-                            # Transforming the data requires a shift since some values may be zero
-                            if Transformed == True:
-                                # Since % composition is determined by the number of a particular
-                                # amino divided by the protein length, and transforming our values
-                                # requires we add 0.5 to the numerator, we add 0.5/length (this is
-                                # described in the About section which can be accessed using the option
-                                # "h"
-                                AAComp = AAComposition[i]+(0.5/Length)
-                                HomologyDictionary[HomologyGroupID][AminoAcids[i]] = [AAComp]
-                            else:
-                                HomologyDictionary[HomologyGroupID][AminoAcids[i]] = [AAComposition[i]]
+                            HomologyDictionary[HomologyGroupID][AminoAcids[i]] = [AAComposition[i]]
                     # Once the homology group ID has been stored in the dictionary, we start adding values
                     # to the preexisting lists
                     else:
                         for i in range(0,len(AminoAcids)):
-                            if Transformed == True:
-                                AAComp = AAComposition[i]+(0.5/Length)
-                                HomologyDictionary[HomologyGroupID][AminoAcids[i]].append(AAComp)
-                            else:  
-                                HomologyDictionary[HomologyGroupID][AminoAcids[i]].append(AAComposition[i])
+                            HomologyDictionary[HomologyGroupID][AminoAcids[i]].append(AAComposition[i])
                 # The dictionary is simpler if we're looking at metrics with single values. It's the same basic
                 # principle, except instead of saving an entry for each amino acid, we only save one list for
                 # that one metric
@@ -683,9 +669,17 @@ def PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AminoAcid
             RScript.write('lambda <- %s\n'%Lambda)
         else:
             RScript.write('lambda <- bc$x[which.max(bc$y)]\n')
+        # Our various possible transformations are defined
+        # For most metrics, we transform using a box-cox transform
         RScript.write('bc.transform <- function(x,L){(x^L-1)/L}\n')
         RScript.write('bc.backtransform <- function(y,L){(L*y+1)^(1/L)}\n')
-        RScript.write('Metric.transform <- bc.transform(df$Metric,lambda)\n')
+        # The exception is when we're dealing with frequency data, specifically the percent AA composition
+        # values. In that case we use an arcsine transform
+        RScript.write('asin.transform <- funtion(x){asin(sqrt(x))}\n')
+        if Metric == 'aacomp':
+            RScript.write('Metric.transform <- asin.transform(df$Metric)\n')
+        else:
+            RScript.write('Metric.transform <- bc.transform(df$Metric,lambda)\n')
         RScript.write('df$Metric.transform<-Metric.transform\n')
         RScript.write('loessMod10 <- loess(df$Metric.transform~df$Age,span=1)\nsmoothed10 <- predict(loessMod10)\n')
         # And a linear regression is performed on the transformed data
@@ -809,7 +803,11 @@ def GenerateSlopesFile(HomologyDictionary,Transformed,Metric,filename,AminoAcid,
                 RScript.write('sprintf("%s %s %s",lambda , min(lambdaInterval), max(lambdaInterval))\n')
         RScript.write('bc.transform <- function(x,L){(x^L-1)/L}\n')
         RScript.write('bc.backtransform <- function(y,L){(L*y+1)^(1/L)}\n')
-        RScript.write('Metric.transform <- bc.transform(df$Metric,lambda)\n')
+        RScript.write('asin.transform <- funtion(x){asin(sqrt(x))}\n')
+        if Metric == 'aacomp':
+            RScript.write('Metric.transform <- asin.transform(df$Metric)\n')
+        else:
+            RScript.write('Metric.transform <- bc.transform(df$Metric,lambda)\n')
         RScript.write('df$Metric.transform<-Metric.transform\n')
         RScript.write('SimpleLinearModel <- lm(df$Metric.transform ~ df$Age)\n')
         RScript.write('summary(SimpleLinearModel)')
