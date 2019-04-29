@@ -675,7 +675,7 @@ def PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AminoAcid
         RScript.write('bc.backtransform <- function(y,L){(L*y+1)^(1/L)}\n')
         # The exception is when we're dealing with frequency data, specifically the percent AA composition
         # values. In that case we use an arcsine transform
-        RScript.write('asin.transform <- funtion(x){asin(sqrt(x))}\n')
+        RScript.write('asin.transform <- function(x){asin(sqrt(x))}\n')
         if Metric == 'aacomp':
             RScript.write('Metric.transform <- asin.transform(df$Metric)\n')
         else:
