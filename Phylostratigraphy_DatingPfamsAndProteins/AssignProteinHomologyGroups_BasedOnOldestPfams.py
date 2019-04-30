@@ -149,21 +149,22 @@ def GeneratePfamClusteringDictionaries(PfamAgesDictionary,DataTablesDictionary,V
                         proteinSpecificPfams[AgeOfPfam] = set([Pfam])
                     else:
                         proteinSpecificPfams[AgeOfPfam].add(Pfam)
-            # We then select the oldest age that shows up in a protein
-            MaxAge = max(proteinSpecificPfams)
-            # If there are multiple pfams sharing that oldest age, we add the set of those Pfams
-            # that share that particular age to the list OldestPfams. This will be used later to
-            # determine the frequency each pfam shows up with others
-            if len(proteinSpecificPfams[MaxAge]) != 1:
-                OldestPfams.append(proteinSpecificPfams[MaxAge])
-                PfamSet.update(proteinSpecificPfams[MaxAge])
-            else:
-                MaxPfam = list(proteinSpecificPfams[MaxAge])[0]
-                PfamSet.add(MaxPfam)
-                if MaxPfam not in SingleOccurences:
-                    SingleOccurences[MaxPfam] = 1
+            # We then select the oldest age that shows up in a protein, assuming one exists
+            if len(proteinSpecificPfams) != 0:
+                MaxAge = max(proteinSpecificPfams)
+                # If there are multiple pfams sharing that oldest age, we add the set of those Pfams
+                # that share that particular age to the list OldestPfams. This will be used later to
+                # determine the frequency each pfam shows up with others
+                if len(proteinSpecificPfams[MaxAge]) != 1:
+                    OldestPfams.append(proteinSpecificPfams[MaxAge])
+                    PfamSet.update(proteinSpecificPfams[MaxAge])
                 else:
-                    SingleOccurences[MaxPfam] += 1
+                    MaxPfam = list(proteinSpecificPfams[MaxAge])[0]
+                    PfamSet.add(MaxPfam)
+                    if MaxPfam not in SingleOccurences:
+                        SingleOccurences[MaxPfam] = 1
+                    else:
+                        SingleOccurences[MaxPfam] += 1
 
         if Verbose == True:
             print('%s Results Parsed\nTime Taken: %s'%(DataTableSource, datetime.datetime.now()-intermediateTime))
@@ -389,57 +390,60 @@ for DataTableSource in DataTables:
         PfamList = Pfams.split(',')
 
         for Pfam in PfamList:
-            AgeOfPfam = PfamAgesDictionary[Pfam]
-            if AgeOfPfam not in proteinSpecificPfams:
-                # We make sure we only have one copy for each pfam that shows up
-                # in the protein by making the collection of PfamUIDs a set
-                proteinSpecificPfams[AgeOfPfam] = set([Pfam])
-            else:
-                proteinSpecificPfams[AgeOfPfam].add(Pfam)
-        # We then select the oldest age that shows up in a protein
-        MaxAge = max(proteinSpecificPfams)
-        # And collect the pfams that all share that common, maximum age
-        MaxAgePfams = proteinSpecificPfams[MaxAge]
+            if Pfam in PfamAgesDictionary:
+                AgeOfPfam = PfamAgesDictionary[Pfam]
+                if AgeOfPfam not in proteinSpecificPfams:
+                    # We make sure we only have one copy for each pfam that shows up
+                    # in the protein by making the collection of PfamUIDs a set
+                    proteinSpecificPfams[AgeOfPfam] = set([Pfam])
+                else:
+                    proteinSpecificPfams[AgeOfPfam].add(Pfam)
+        # Ignores proteins without valid pfams
+        if len(proteinSpecificPfams) != 0:
+            # We then select the oldest age that shows up in a protein
+            MaxAge = max(proteinSpecificPfams)
+            # And collect the pfams that all share that common, maximum age
+            MaxAgePfams = proteinSpecificPfams[MaxAge]
 
-        # This should be cleaned up in the submodule at some point, but pfams that show up as the
-        # oldest and don't share their age with any other pfam don't wind up in the clustering dictionaries
-        # We add them below
-        for MaxAgePfam in MaxAgePfams:
-            # First we check if the pfam exists in the dictionary
-            try:
-                PfamHomologyGroupLocation[MaxAgePfam]
-            # If it doesn't, we assign it the next highest clustering ID in the dictionary
-            except KeyError:
-                ClusteringID = max(PfamClusteringGroups) + 1
+            # This should be cleaned up in the submodule at some point, but pfams that show up as the
+            # oldest and don't share their age with any other pfam don't wind up in the clustering dictionaries
+            # We add them below
+            for MaxAgePfam in MaxAgePfams:
+                # First we check if the pfam exists in the dictionary
+                try:
+                    PfamHomologyGroupLocation[MaxAgePfam]
+                # If it doesn't, we assign it the next highest clustering ID in the dictionary
+                except KeyError:
+                    ClusteringID = max(PfamClusteringGroups) + 1
 
-                PfamHomologyGroupLocation[MaxAgePfam] = ClusteringID
-                PfamClusteringGroups[ClusteringID] = MaxAgePfam
-        # Next, since the only thing we're interested in is the clusteringIDs that show up in each protein, we
-        # reduce the set we're considering from the max age pfams to just the set of clustering IDs
-        homologyGroupIDs = set([PfamHomologyGroupLocation[i] for i in MaxAgePfams])
-        # If only one clustering ID is associated with that protein, then the homology group number assignment is
-        # trivial
-        if len(homologyGroupIDs) == 1:
-            AssignedHomologyGroupID = list(homologyGroupIDs)[0]
-        # If there's more than one, then we assign a new homology group number
-        else:
-            # It's possible that that combination of clustering IDs has shown up before, so we first to check to see
-            # whether there's a homology ID associated with that cluster
-            clustering = ','.join([str(j) for j in sorted(list(set([PfamHomologyGroupLocation[i] for i in MaxAgePfams])))])
-            # If it has never shown up before, then we add it to our dictionaries and assign the new homology group ID
-            # to that cluster
-            if clustering not in PfamHomologyGroupLocation:
-                AssignedHomologyGroupID = max(PfamClusteringGroups) + 1
-                PfamHomologyGroupLocation[clustering] = AssignedHomologyGroupID
-                PfamClusteringGroups[AssignedHomologyGroupID] = clustering
-            # If that particular cluster has shown up before, then we assign the homology group ID that's associated with that
-            # cluster to the protein
+                    PfamHomologyGroupLocation[MaxAgePfam] = ClusteringID
+                    PfamClusteringGroups[ClusteringID] = MaxAgePfam
+            # Next, since the only thing we're interested in is the clusteringIDs that show up in each protein, we
+            # reduce the set we're considering from the max age pfams to just the set of clustering IDs
+            homologyGroupIDs = set([PfamHomologyGroupLocation[i] for i in MaxAgePfams])
+            # If only one clustering ID is associated with that protein, then the homology group number assignment is
+            # trivial
+            if len(homologyGroupIDs) == 1:
+                AssignedHomologyGroupID = list(homologyGroupIDs)[0]
+            # If there's more than one, then we assign a new homology group number
             else:
-                AssignedHomologyGroupID = PfamHomologyGroupLocation[clustering]
-        # Once a homology group ID has been assigned to the protein, that number is uploaded into the protein metrics dictionary
-        UpdateStatement = "UPDATE " + ProteinMetricsTable + " SET " + HomGpColumn + "=" + str(AssignedHomologyGroupID) + " WHERE " + ProteinMetricsUIDColumn + "=" + str(UID)
-        mycursor.execute(UpdateStatement)
-        cnx.commit()
+                # It's possible that that combination of clustering IDs has shown up before, so we first to check to see
+                # whether there's a homology ID associated with that cluster
+                clustering = ','.join([str(j) for j in sorted(list(set([PfamHomologyGroupLocation[i] for i in MaxAgePfams])))])
+                # If it has never shown up before, then we add it to our dictionaries and assign the new homology group ID
+                # to that cluster
+                if clustering not in PfamHomologyGroupLocation:
+                    AssignedHomologyGroupID = max(PfamClusteringGroups) + 1
+                    PfamHomologyGroupLocation[clustering] = AssignedHomologyGroupID
+                    PfamClusteringGroups[AssignedHomologyGroupID] = clustering
+                # If that particular cluster has shown up before, then we assign the homology group ID that's associated with that
+                # cluster to the protein
+                else:
+                    AssignedHomologyGroupID = PfamHomologyGroupLocation[clustering]
+            # Once a homology group ID has been assigned to the protein, that number is uploaded into the protein metrics dictionary
+            UpdateStatement = "UPDATE " + ProteinMetricsTable + " SET " + HomGpColumn + "=" + str(AssignedHomologyGroupID) + " WHERE " + ProteinMetricsUIDColumn + "=" + str(UID)
+            mycursor.execute(UpdateStatement)
+            cnx.commit()
 
 cnx.close()
 
