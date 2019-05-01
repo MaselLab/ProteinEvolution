@@ -797,7 +797,7 @@ def GenerateSlopesFile(HomologyDictionary,Transformed,Metric,filename,AminoAcid,
 
         RScript.write('bc.transform <- function(x,L){(x^L-1)/L}\n')
         RScript.write('bc.backtransform <- function(y,L){(L*y+1)^(1/L)}\n')
-        RScript.write('asin.transform <- funtion(x){asin(sqrt(x))}\n')
+        RScript.write('asin.transform <- function(x){asin(sqrt(x))}\n')
         if Metric == 'aacomp':
             RScript.write('Metric.transform <- asin.transform(df$Metric)\n')
         else:
