@@ -663,12 +663,7 @@ def PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AminoAcid
     # transformation function and add an additional column to our dataframe that contains all the transformed
     # values
     if Transformed == True:
-        RScript.write('bc <- boxcox(df$Metric~1, lambda = seq(.1,.7,0.01))\n')
-        # The script selects the optimal value to transform the data with
-        if type(Lambda) == float:
-            RScript.write('lambda <- %s\n'%Lambda)
-        else:
-            RScript.write('lambda <- bc$x[which.max(bc$y)]\n')
+
         # Our various possible transformations are defined
         # For most metrics, we transform using a box-cox transform
         RScript.write('bc.transform <- function(x,L){(x^L-1)/L}\n')
@@ -679,6 +674,12 @@ def PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AminoAcid
         if Metric == 'aacomp':
             RScript.write('Metric.transform <- asin.transform(df$Metric)\n')
         else:
+            RScript.write('bc <- boxcox(df$Metric~1, lambda = seq(.1,.7,0.01))\n')
+            # The script selects the optimal value to transform the data with
+            if type(Lambda) == float:
+                RScript.write('lambda <- %s\n'%Lambda)
+            else:
+                RScript.write('lambda <- bc$x[which.max(bc$y)]\n')
             RScript.write('Metric.transform <- bc.transform(df$Metric,lambda)\n')
         RScript.write('df$Metric.transform<-Metric.transform\n')
         RScript.write('loessMod10 <- loess(df$Metric.transform~df$Age,span=1)\nsmoothed10 <- predict(loessMod10)\n')
@@ -793,20 +794,21 @@ def GenerateSlopesFile(HomologyDictionary,Transformed,Metric,filename,AminoAcid,
     # If a transformation is desired, then R box-cox transforms the data and perfoms a linear regression. Otherwise,
     # a linear regression is performed on untransformed data
     if Transformed == True:
-        RScript.write('bc <- boxcox(df$Metric~1, lambda = seq(.1,.7,0.01))\n')
-        if type(Lambda) == float:
-            RScript.write('lambda <- %s\n'%Lambda)
-        else:
-            RScript.write('lambda <- bc$x[which.max(bc$y)]\n')
-            RScript.write('lambdaInterval <- range(bc$x[bc$y > max(bc$y) -1/2*qchisq(.95,1)])\n')
-            if Lambda == True:
-                RScript.write('sprintf("%s %s %s",lambda , min(lambdaInterval), max(lambdaInterval))\n')
+
         RScript.write('bc.transform <- function(x,L){(x^L-1)/L}\n')
         RScript.write('bc.backtransform <- function(y,L){(L*y+1)^(1/L)}\n')
         RScript.write('asin.transform <- funtion(x){asin(sqrt(x))}\n')
         if Metric == 'aacomp':
             RScript.write('Metric.transform <- asin.transform(df$Metric)\n')
         else:
+            RScript.write('bc <- boxcox(df$Metric~1, lambda = seq(.1,.7,0.01))\n')
+            if type(Lambda) == float:
+                RScript.write('lambda <- %s\n'%Lambda)
+            else:
+                RScript.write('lambda <- bc$x[which.max(bc$y)]\n')
+                RScript.write('lambdaInterval <- range(bc$x[bc$y > max(bc$y) -1/2*qchisq(.95,1)])\n')
+            if Lambda == True:
+                RScript.write('sprintf("%s %s %s",lambda , min(lambdaInterval), max(lambdaInterval))\n')
             RScript.write('Metric.transform <- bc.transform(df$Metric,lambda)\n')
         RScript.write('df$Metric.transform<-Metric.transform\n')
         RScript.write('SimpleLinearModel <- lm(df$Metric.transform ~ df$Age)\n')
