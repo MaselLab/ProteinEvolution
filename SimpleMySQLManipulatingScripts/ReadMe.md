@@ -19,7 +19,7 @@ If you need any guidance with respect to executing MySQL commands, [this is a go
 
 ### AddIndexToMySQLTable.py
 
-Author : Sara Willis
+Author : Sara Willis  
 Date   : Monday January 7, 2019
 
 This script's function is to add an index to a MySQL table for a preexisting column. This is a really good idea to do for large tables where the user wishes to extract/upload entries based on values not associated with the table's primary key. Examples of this include:
@@ -40,14 +40,14 @@ The script takes the following user-provided input:
 
 ### AddMySQLColumn.py
 
-Author : Sara Willis
+Author : Sara Willis  
 Date   : March 11, 2019
 
 This script is designed to add a column to a MySQL table. When working with relatively small tables, this can be done using the GUI Navicat. As tables get larger this becomes a more cumbersome because when a column is added, it requires the table be recreated which can take a long time. This script allows Navicat to remain in an unfrozen state while a column is added to a table in the background.
 
 ### CalculateSizeOfMySQLTable.py
 
-Author : Sara Willis
+Author : Sara Willis  
 Date   : April 17, 2019
 
 The purpose of this script is to calculate the size of a MySQL datatable in MB for the user. The user should enter their MySQL connection information and the name of the table they want to know the size of under User-Specific Data. The program will then print the size of the table to the terminal 
@@ -55,7 +55,7 @@ The purpose of this script is to calculate the size of a MySQL datatable in MB f
 
 ### DeleteSpecies.py
 
-Author : Sara Willis
+Author : Sara Willis  
 Date   : February 18, 2019
 
 This is a very simple script that's used to delete a specific species from a mysql database using a species UID
@@ -63,7 +63,7 @@ This is a very simple script that's used to delete a specific species from a mys
 
 ### DropMySQLColumn.py 
 
-Author : Sara Willis
+Author : Sara Willis  
 Date   : May 8, 2019
 
 This script is designed to drop unwanted columns from a MySQL table. The user needs to define the column(s) that need to be deleted and the table name. If more than one column needs to go, then the user should input the columns as comma-delimited strings:
@@ -88,7 +88,7 @@ for multiple
 
 ### KillHangingTable.py
 
-Author : Sara Willis
+Author : Sara Willis  
 Date   : Wednesday May 8, 2019
 
 This script is designed to kill MySQL processes that are "hanging". This can happen if a user attempts to alter a table manually (i.e. using NaviCat or some other GUI) and the program freezes up. This can result in the user force-quitting the application, opening the application again, and attempting to open the table only to find that nothing loads.
@@ -103,7 +103,7 @@ NOTE: This script will only allow the user to see the process they are currently
 
 ### MakeDataTableBackup.py
 
-Author: Sara Willis
+Author: Sara Willis  
 Date  : Monday January 7, 2019
 
 This script is used to make backups of large MySQL data tables that cannot be backed up by more conventional methods
