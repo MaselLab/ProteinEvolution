@@ -60,6 +60,21 @@ Date   : February 18, 2019
 
 This is a very simple script that's used to delete a specific species from a mysql database using a species UID
 
+### KillHangingTable.py
+
+Author : Sara Willis
+Date   : Wednesday May 8, 2019
+
+This script is designed to kill MySQL processes that are "hanging". This can happen if a user attempts to alter a table manually (i.e. using NaviCat or some other GUI) and the program freezes up. This can result in the user force-quitting the application, opening the application again, and attempting to open the table only to find that nothing loads.
+
+To solve this problem, you can execute a command in MySQL that shows all the processes that are currently running. The problematic processes will show as: 
+      
+           "Waiting for table metadata lock"
+
+This script will collect all the processes that are currently running on MySQL (**for that specific user**) and will print them out on the command line. It will then prompt them for the ID of the process they want to terminate. If they select a valid ID, the script will terminate it.
+
+NOTE: This script will only allow the user to see the process they are currently running and not other users logged in remotely to the machine hosting MySQL so if there is another user locking up a table you will need to talk them into using this script. 
+
 ### MakeDataTableBackup.py
 
 Author: Sara Willis
