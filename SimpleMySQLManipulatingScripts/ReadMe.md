@@ -60,6 +60,32 @@ Date   : February 18, 2019
 
 This is a very simple script that's used to delete a specific species from a mysql database using a species UID
 
+
+### DropMySQLColumn.py 
+
+Author : Sara Willis
+Date   : May 8, 2019
+
+This script is designed to drop unwanted columns from a MySQL table. The user needs to define the column(s) that need to be deleted and the table name. If more than one column needs to go, then the user should input the columns as comma-delimited strings:
+
+```
+ColumnsToBeDeleted = 'Column1' [, 'Column2'[ , 'Column3' [, ...]]]
+```
+
+ Where options in the square brackets are optional
+
+ for example:
+ 
+```
+ColumnsToBeDeleted = 'Column1'
+```
+
+for one column, or:
+```
+ColumnsToBeDeleted = 'Column1','Column2',...
+```
+for multiple
+
 ### KillHangingTable.py
 
 Author : Sara Willis
