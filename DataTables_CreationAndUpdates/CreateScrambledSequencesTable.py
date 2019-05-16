@@ -8,7 +8,7 @@ from Bio.Seq import Seq
 Author : Sara Willis
 Date   : May 16, 2019
 
-This script takes a set of protein sequences and generates a set of scrambled sequences by randomly sampling from the source protein without replacement. The sequences are then uploaded to a MySQL table to be stored along with the UID of the generating protein. 
+This script takes a set of protein sequences and generates a set of scrambled sequences by randomly sampling from the source protein without replacement. The sequences are then uploaded to a MySQL table to be stored along with the UID of the generating protein. The data table where the scrambled sequences will be stored should exist prior to running this script.
 '''
 
 ##########################################################################################
