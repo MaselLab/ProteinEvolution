@@ -6,7 +6,7 @@ Date   : May 13, 2019
 
 This script is designed to calculate Delta Tango values for entries in stored in MySQL Tables. 
 
-Delta tango calculates two scores which are calculated as:
+Delta tango calculates two scores:
     
     1) Density of APRs (original protein) - Density of APRs (scrambled protein)
 
