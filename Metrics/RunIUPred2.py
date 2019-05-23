@@ -5,10 +5,6 @@ from Bio.Seq import Seq
 from multiprocessing import Pool
 
 '''
-Author : Sara Willis
-Date   : February 11, 2019
---------------------------
-
 This script is used to run IUPred2 on proteins stored in a MySQL database 
 
 Dependencies:
@@ -51,15 +47,15 @@ def UserOptions():
 
     # User's MySQL Database information
     # ------------------------
-    Database = 'PFAMphylostratigraphy'                      # Name of user's database
+    Database = ''                                           # Name of user's database
     User = ''                                               # Username to access Fusion/MySQL
-    Host = '127.0.0.1'                                      # MySQL host
+    Host = ''                                               # MySQL host
     Password = ''                                           # User's MySQL password
-    DataTable = 'NCBIGenomes_Protein_Complete'              # Name of the DataTable in the Database where sequences are stored
-    ProteinColumnName = 'ProteinSequence'                   # Name of the column where the user's proteins are stored in the data table
+    DataTable = 'NCBIGenomes_ScrambledSequences_Complete'   # Name of the DataTable in the Database where sequences are stored
+    ProteinColumnName = 'ScrambledSequence'                 # Name of the column where the user's proteins are stored in the data table
     UIDColumnName = 'UID'                                   # Name of the column where the user's table uids are stored in the data table
-    IupredAverageColumnName = 'NoCysMeanISD'                # Name of the column where the user's IUPred averages are stored
-    IupredRawScoreColumnName = 'NoCysISD_RawIUPredScores'   # Name of the column where the user's raw IUPred scores are stored
+    IupredAverageColumnName = 'MeanISD_IUPred2_WithCys'     # Name of the column where the user's IUPred averages are stored
+    IupredRawScoreColumnName = 'ISD_RawIUPredScores_CysIncluded'   # Name of the column where the user's raw IUPred scores are stored
     AnchorRawScoreColumnName = ''                           # Name of the column where the user's raw Anchor scores are stored. If anchor is not run, this can be left blank
 
     # The user-defined options are returned as a dictionary for use throughout the rest of the script
@@ -167,7 +163,7 @@ def CalculateDisorder_IUPred2(UID,ProteinSequence, batch):
         # Each row in the output file is searched
         for row in reader:
             # If the row starts with the character #, it is a human-readable row containing no data and so is skipped
-            if '#' in row or len(row) == 1:
+            if len(row) in [0,1] or '#' in row[0]:
                 pass
             else:
                 # If the row doesn't start with #, then it contains data and so the row is parsed
