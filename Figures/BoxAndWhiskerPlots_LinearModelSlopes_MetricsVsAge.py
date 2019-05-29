@@ -66,8 +66,9 @@ Note: order is not important for the command-line arguments
 
 
 
-Usage            :  python3 ScriptName.py pfam|fullgene metric=<x> [test] [speciesuid=<n>] [kingdom=<x>] [transformed] 
-                                                                   [transmembrane=<x>] [xlim=xmin,xmax] [ylim=ymin,ymax] [aa=<x>] [slopes]
+Usage             :  python3 ScriptName.py pfam|fullgene metric=<x> [test] [speciesuid=<n>] [kingdom=<x>] [transformed] 
+                                                                    [transmembrane=<x>] [xlim=xmin,xmax] [ylim=ymin,ymax] 
+                                                                    [aa=<x>] [slopes] [eukaryotespecific] [lambda[=<x>]]
 
 
 
@@ -75,38 +76,47 @@ Usage            :  python3 ScriptName.py pfam|fullgene metric=<x> [test] [speci
 
 
 
-pfam|fullgene    :  (required) pfam or fullgene. Specifies which dataset used to generate slopes
+pfam|fullgene     :  (required) pfam or fullgene. Specifies which dataset used to generate slopes
                        
-metric=<x>       :  (required) Specifies which metric will be plotted
+metric=<x>        :  (required) Specifies which metric will be plotted
                                                   
-test             :  if included, only extracts first 1000 columns from each data table. For use with testing and debugging
+test              :  if included, only extracts first 1000 columns from each data table. For use with testing and debugging
 
-speciesuid=n     :  Amino acid slopes for species with species UID n (found in SpeciesList MySQL table)
+speciesuid=n      :  Amino acid slopes for species with species UID n (found in SpeciesList MySQL table)
                 
-kingdom=x        :  Amino acid slopes for designated kingdom 
+kingdom=x         :  Amino acid slopes for designated kingdom 
                                                           
-transformed      :  Uses Box-Cox transform to normalize dataset before computing slope                                  
+transformed       :  Uses Box-Cox transform to normalize dataset before computing slope                                  
                     By default, if this argument is not included, the data will not be transformed
                      
-transmembrane=x  :  When not included as an argument, all data points are included.                                     
-                    When x=true, only includes transmembrane proteins/domains                                           
-                    When x=false, only includes proteins/domains predicted to not be transmembrane
-                     
-aa=<x>           :  Chooses the amino acid(s) to be analyze. For all amino acids, use "all" or leave blank              
-                    Otherwise use a comma-delimited string to select a subset. e.g. aa=V,L,F,M
+transmembrane=x   :  When not included as an argument, all data points are included.                                     
+                     When x=true, only includes transmembrane proteins/domains                                           
+                     When x=false, only includes proteins/domains predicted to not be transmembrane
                          
-xlim=xmin,xmax   :  configures the x limits of the R plot.
-                                                             
-ylim=ymin,ymax   :  configures the y limits of the R plot.
+xlim=xmin,xmax    :  Configures the x limits of the R plot.
+                                                              
+ylim=ymin,ymax    :  Configures the y limits of the R plot.
 
+                     
+aa=<x>            :  Chooses the amino acid(s) to be analyze. For all amino acids, use "all" or leave blank              
+                    Otherwise use a comma-delimited string to select a subset. e.g. aa=V,L,F,M
+
+slopes            :  Prints a csv file with linear regression slopes instead of producing a figure
+
+eukaryotespecific : Selects only pfams flagged as eukaryote specific
+
+
+lambda=<x>        : Including the argument lambda writes to a file the value used to transform the data. This
+                    only works if the user has selected the "slopes" option. If the user includes a value, then
+                    the script uses that value to transform the data instead of finding the optimal value 
                                                             
 -------------
-Domain Options   :  ISD, DensityOfAPRs, DensityOfAAsInAPRs, Clustering_Trunc, Clustering_AllFrames, Length, AAComp
+Domain Options    :  ISD, DensityOfAPRs, DensityOfAAsInAPRs, Clustering_Trunc, Clustering_AllFrames, Length, AAComp
      
-Kingdom Options  :  invertebrate, vertebrate, plant, fungi
+Kingdom Options   :  invertebrate, vertebrate, plant, fungi
 
                                                             
-Metric Options   :  ISD, DensityOfAPRs, DensityOfAAsInAPRs, Length, AAComp
+Metric Options    :  ISD, DensityOfAPRs, DensityOfAAsInAPRs, Length, AAComp
 
                                             
 ---------------------------------------- Data Transformation ---------------------------------------
@@ -233,32 +243,40 @@ def About():
 
     print('\n\n---------------------------------------------- Usage ----------------------------------------------\n\n\n')
     print('{:<17}{:<3}{:<100}'.format('Usage',':', 'python3 ScriptName.py pfam|fullgene metric=<x> [test] [speciesuid=<n>] [kingdom=<x>] [transformed]'))
-    print('{:<64}{:<3}{:<100}'.format('','', '[transmembrane=<x>] [xlim=<xmin,xmax>] [ylim=ymin,ymax] [aa=<x>] [slopes] [lambda[=<x>]]')+'\n')
+    print('{:<64}{:<3}{:<100}'.format('','', '[transmembrane=<x>] [xlim=<xmin,xmax>] [ylim=ymin,ymax] [aa=<x>]'))
+    print('{:<64}{:<3}{:<100}'.format('','', '[slopes] [eukaryotespecific] [lambda[=<x>]')+'\n')
+
     print('\n\n--------------------------------------------- Options ----------------------------------------------\n\n\n')
-    print('{:<17}{:<3}{:<100}'.format('pfam|fullgene',':','(required) pfam or fullgene. Specifies which dataset used to generate slopes\n'))
-    print('{:<17}{:<3}{:<100}'.format('metric=<x>',':','(required) Specifies which metric will be plotted\n'))
-    print('{:<17}{:<3}{:<100}'.format('test',':','if included, only extracts first 1000 columns from each data table. For use'))
-    print('{:<17}{:<3}{:<100}'.format('','','with testing and debugging\n'))
+    print('{:<18}{:<3}{:<100}'.format('pfam|fullgene',':','(required) pfam or fullgene. Specifies which dataset used to generate slopes\n'))
+    print('{:<18}{:<3}{:<100}'.format('metric=<x>',':','(required) Specifies which metric will be plotted\n'))
+    print('{:<18}{:<3}{:<100}'.format('test',':','if included, only extracts first 1000 columns from each data table. For use'))
+    print('{:<18}{:<3}{:<100}'.format('','','with testing and debugging\n'))
 
-    print('{:<17}{:<3}{:<100}'.format('speciesuid=<n>',':','Amino acid slopes for species with species UID n (found in SpeciesList'))
-    print('{:<17}{:<3}{:<100}'.format('','','MySQL table)\n'))
+    print('{:<18}{:<3}{:<100}'.format('speciesuid=<n>',':','Amino acid slopes for species with species UID n (found in SpeciesList'))
+    print('{:<18}{:<3}{:<100}'.format('','','MySQL table)\n'))
 
-    print('{:<17}{:<3}{:<100}'.format('kingdom=<x>',':','Amino acid slopes for designated kingdom \n'))
-    print('{:<17}{:<3}{:<100}'.format('transformed',':','Uses Box-Cox transform to normalize dataset before computing slope'))
-    print('{:<17}{:<3}{:<100}'.format('','','By default, if this argument is not included, the data will not be transformed\n'))
-    print('{:<17}{:<3}{:<100}'.format('transmembrane=<x>',':','When not included as an argument, all data points are included.'))
-    print('{:<17}{:<3}{:<100}'.format('','','When x=true, only includes transmembrane proteins/domains'))
-    print('{:<17}{:<3}{:<100}'.format('','','When x=false, only includes proteins/domains predicted to not be transmembrane\n'))
-    print('{:<17}{:<3}{:<100}'.format('aa=<x>',':','Chooses the amino acid(s) to be analyze. For all amino acids, use "all" or leave'))
-    print('{:<17}{:<3}{:<100}'.format('','','blank. Otherwise use a comma-delimited string to select a subset. e.g. aa=V,L,F,M\n'))
+    print('{:<18}{:<3}{:<100}'.format('kingdom=<x>',':','Amino acid slopes for designated kingdom \n'))
+    print('{:<18}{:<3}{:<100}'.format('transformed',':','Uses Box-Cox transform to normalize dataset before computing slope'))
+    print('{:<18}{:<3}{:<100}'.format('','','By default, if this argument is not included, the data will not be transformed\n'))
+    print('{:<18}{:<3}{:<100}'.format('transmembrane=<x>',':','When not included as an argument, all data points are included.'))
+    print('{:<18}{:<3}{:<100}'.format('','','When x=true, only includes transmembrane proteins/domains'))
+    print('{:<18}{:<3}{:<100}'.format('','','When x=false, only includes proteins/domains predicted to not be transmembrane\n'))
 
-    print('{:<17}{:<3}{:<100}'.format('xlim=<xmin,xmax>',':','configures the x limits of the R plot.\n'))
-    print('{:<17}{:<3}{:<100}'.format('ylim=<ymin,ymax>',':','configures the y limits of the R plot.\n'))
+
+    print('{:<18}{:<3}{:<100}'.format('xlim=<xmin,xmax>',':','configures the x limits of the R plot.\n'))
+    print('{:<18}{:<3}{:<100}'.format('ylim=<ymin,ymax>',':','configures the y limits of the R plot.\n'))
+
+    print('{:<18}{:<3}{:<100}'.format('aa=<x>',':','Chooses the amino acid(s) to be analyze. For all amino acids, use "all" or leave'))
+    print('{:<18}{:<3}{:<100}'.format('','','blank. Otherwise use a comma-delimited string to select a subset. e.g. aa=V,L,F,M\n'))
+
+    print('{:<18}{:<3}{:<100}'.format('slopes',':','Prints a csv file with linear regression slopes instead of producing a figure\n'))
     
-    print('{:<17}{:<3}{:<100}'.format('lambda[=<x>]',':','Including the argument lambda writes to a file the value used to transform'))
-    print('{:<17}{:<3}{:<100}'.format('','','the data. This only works if the user has selected the "slopes" option. If the'))
-    print('{:<17}{:<3}{:<100}'.format('','','user includes a value, then the script uses that value to transform the data instead of'))
-    print('{:<17}{:<3}{:<100}'.format('','','finding the optimal value.\n\n'))
+    print('{:<18}{:<3}{:<100}'.format('eukaryotespecific',':','Selects only pfams flagged as eukaryote specific\n'))
+    
+    print('{:<18}{:<3}{:<100}'.format('lambda[=<x>]',':','Including the argument lambda writes to a file the value used to transform'))
+    print('{:<18}{:<3}{:<100}'.format('','','the data. This only works if the user has selected the "slopes" option. If the'))
+    print('{:<18}{:<3}{:<100}'.format('','','user includes a value, then the script uses that value to transform the data instead of'))
+    print('{:<18}{:<3}{:<100}'.format('','','finding the optimal value.\n\n'))
 
 
 
@@ -568,6 +586,8 @@ def ConfigureExtractionStatement(SequenceType,Kingdom,SpeciesUID,Test,Metric,Euk
                 pfamDataTable = DataTables[dataTable][TableDesignation]
                 DataTables[dataTable]['Extraction Statement'] += " WHERE %s.%s"%(pfamDataTable,PfamDataTableUIDColumn)+" <1000"
 
+        # If the user has specified they only want eukaryote specific pfams, then only those that are flagged as such
+        # in the pfam table are pulled from the relevant tables using a where statement
         if EukaryoteSpecific == True and TableDesignation != 'Protein Table':
             if 'WHERE' in DataTables[dataTable]['Extraction Statement']:
                 DataTables[dataTable]['Extraction Statement'] += " AND %s.%s"%(PfamUIDTable,EukaryoteSpecificColumn) +"='True'"
