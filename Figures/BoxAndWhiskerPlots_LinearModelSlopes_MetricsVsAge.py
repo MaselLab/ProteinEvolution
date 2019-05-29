@@ -134,7 +134,7 @@ protein/domain length prior to extraction, this is achieved by adding 0.5\length
 
 
 # User's MySQL Connection Information
-Database = ''
+Database = 'PFAMphylostratigraphy'
 User = ''
 Host = ''
 Password = ''
@@ -158,6 +158,9 @@ TransmembraneColumn           = 'ExpAA'
 UIDColumn                     = 'ProteinTableUID'
 FullGeneSpeciesUIDColumn      = 'SpeciesUID'
 ProteinLengthColumn           = 'ProteinLength'
+DeltaTangoColumn_APR          = 'DeltaTango_DensityOfAggProneRegions'
+DeltaTangoColumn_AAAPR        = 'DeltaTango_DensityOfAAsInAPRs'
+DeltaISDColumn                = 'DeltaISD_IUPred2_WithCys'
 
 # Pfam Data Tables
 EnsemblPfamDataTable          = 'Genomes_Multicellular_DomainMetrics'
@@ -174,6 +177,7 @@ DomainLengthColumn            = 'DomainLength'
 PfamUIDTable                  = 'PfamUIDsTable_EnsemblAndNCBI'
 PfamUIDColumn                 = 'PfamUID'
 PfamAgeColumn                 = 'Age_Oldest_MY'
+EukaryoteSpecificColumn       = 'EukaryoteSpecific'
 
 # Species Table
 SpeciesTable                  = 'SpeciesList'
@@ -200,7 +204,10 @@ MetricOptions = {'isd': ['MeanISD_IUPred2_WithCys', 'Mean ISD'],
                  'clustering_allframes': ['NormalizedIndexOfDispersion_AllPhases_FILVM','Clustering (All Frames, FILVM)'],
                  'proteinlength': ['ProteinLength', 'Protein Length'],
                  'domainlength':[DomainLengthColumn, 'Domain Length'],
-                 'aacomp': ['PercentAminoAcidComposition','Percent Amino Acid Composition']}
+                 'aacomp': ['PercentAminoAcidComposition','Percent Amino Acid Composition'],
+                 'deltatango_apr': ['DeltaTango_DensityOfAggProneRegions','Delta Tango (Density of APRs)'],
+                 'deltatango_aaapr': ['DeltaTango_DensityOfAAsInAPRs','Delta Tango (Density of AAs in APRs)'],
+                 'deltaisd': ['DeltaISD_IUPred2_WithCys', 'Delta ISD']}
 
 
 
@@ -470,13 +477,17 @@ def ParseUserOptions(Arguments,filename_prefix):
 
         Lambda = False
         print('\n{:<45}{:<5}{:<100}'.format('\u001b[33;1mNo lambda option specified','',''))
+    try:
+        EukaryoteSpecific = arguments['eukaryotespecific']
+    except:
+        EukaryoteSpecific = False
 
                 
 
 
     print('\u001b[0m\n\n')
     print('\n\n\n##########################################################################################\n\n\n\n')
-    return SequenceType,SpeciesUID,Transformed,Kingdom,Transmembrane,Test,Metric,AminoAcidSelection,filename_prefix,RXLim,RYLim,Slopes,Lambda
+    return SequenceType,SpeciesUID,Transformed,Kingdom,Transmembrane,Test,Metric,AminoAcidSelection,filename_prefix,RXLim,RYLim,Slopes,Lambda,EukaryoteSpecific
 
 
 # -------------------------------------------------------------------------------------------------------------------
@@ -491,7 +502,7 @@ a particular species, a particular kingdom, or want to only test the script, we 
 # extracting
 '''
 
-def ConfigureExtractionStatement(SequenceType,Kingdom,SpeciesUID,Test,Metric):
+def ConfigureExtractionStatement(SequenceType,Kingdom,SpeciesUID,Test,Metric,EukaryoteSpecific):
     # Ensembl and NCBI tables each need their own extraction statements
     DataTables = {'Ensembl':
                   {'Protein Table':EnsemblProteinDataTable,'Pfam Table':EnsemblPfamDataTable,'Unique Table':EnsemblUniqueProteinTable,'Extraction Statement':'','Type':''},
@@ -528,7 +539,7 @@ def ConfigureExtractionStatement(SequenceType,Kingdom,SpeciesUID,Test,Metric):
             DataTables[dataTable]['Type'] = 'Pfam Table'
 
 
-    # Noqw customization can take place
+    # Now customization can take place
     for dataTable in DataTables:
         TableDesignation = DataTables[dataTable]['Type']
 
@@ -556,6 +567,13 @@ def ConfigureExtractionStatement(SequenceType,Kingdom,SpeciesUID,Test,Metric):
             else:
                 pfamDataTable = DataTables[dataTable][TableDesignation]
                 DataTables[dataTable]['Extraction Statement'] += " WHERE %s.%s"%(pfamDataTable,PfamDataTableUIDColumn)+" <1000"
+
+        if EukaryoteSpecific == True and TableDesignation != 'Protein Table':
+            if 'WHERE' in DataTables[dataTable]['Extraction Statement']:
+                DataTables[dataTable]['Extraction Statement'] += " AND %s.%s"%(PfamUIDTable,EukaryoteSpecificColumn) +"='True'"
+            else:
+                DataTables[dataTable]['Extraction Statement'] += " WHERE %s.%s"%(PfamUIDTable,EukaryoteSpecificColumn) +"='True'"
+
     # And we return the customized extraction statements to the user. There will be two of them, one for NCBI, one for Ensembl
     return [DataTables[i]['Extraction Statement'] for i in DataTables]
 
@@ -634,11 +652,13 @@ def PlotInR(HomologyDictionary,Transformed,Metric,filename,RXLim,RYLim,AminoAcid
     DataFrameForR.write('Metric,Age\n')
 
     for HomologyGroupID in HomologyDictionary:
+
         # If we're not looking at amino acid composition as our metric, then we pull the single metric available
         # for the homology group we're considering by averaging over all values of that metric associated with that
         # homology group ID. 
         if AminoAcid == None:
-            MeanHomologyGroupMetric = np.mean(HomologyDictionary[HomologyGroupID]['Metric'])
+            MeanHomologyGroupMetric = np.mean([float(i) for i in HomologyDictionary[HomologyGroupID]['Metric']])
+
         # If we're considering amino acid composition, then we pull the fractional scores associated with that particular
         # amino acid from the homology group dictionary. This function is designed to be run on one amino acid at a time, so
         # only the specified amino acid (input = AminoAcid) is selected for analysis
@@ -865,13 +885,14 @@ mycursor = cnx.cursor(buffered = True)
 filename_prefix = 'MetricVsTime'
 
 # The user's input is parsed so the program knows how to run
-SequenceType,SpeciesUID,Transformed,Kingdom,Transmembrane,Test,Metric,AminoAcidSelection,filename,RXLim,RYLim,Slopes,Lambda = ParseUserOptions(sys.argv[1:],filename_prefix)
+SequenceType,SpeciesUID,Transformed,Kingdom,Transmembrane,Test,Metric,AminoAcidSelection,filename,RXLim,RYLim,Slopes,Lambda,EukaryoteSpecific = ParseUserOptions(sys.argv[1:],filename_prefix)
 
 
 
 # The MySQL extraction statements are somewhat complicated so they are generated systematically with their own
 # function
-extractionStatements = ConfigureExtractionStatement(SequenceType,Kingdom,SpeciesUID,Test,Metric)
+extractionStatements = ConfigureExtractionStatement(SequenceType,Kingdom,SpeciesUID,Test,Metric,EukaryoteSpecific)
+
 
 
 # We need to extract our data from multiple databases, so we'll store results all extracted results
