@@ -144,7 +144,7 @@ protein/domain length prior to extraction, this is achieved by adding 0.5\length
 
 
 # User's MySQL Connection Information
-Database = 'PFAMphylostratigraphy'
+Database = ''
 User = ''
 Host = ''
 Password = ''
@@ -182,6 +182,10 @@ PfamDataTableProteinUIDColumn = 'ProteinTableUID'
 PfamSpeciesUIDColumn          = 'SpeciesUID'
 PfamDataTablePfamUIDColumn    = 'PfamUID'
 DomainLengthColumn            = 'DomainLength'
+DomainTransmembraneColumn     = 'TmhmmTopology'
+
+# This is the 
+TransmembraneThresholdCutoff  = 0.5
 
 # Pfam UID Table
 PfamUIDTable                  = 'PfamUIDsTable_EnsemblAndNCBI'
@@ -552,7 +556,7 @@ def ConfigureExtractionStatement(SequenceType,Kingdom,SpeciesUID,Test,Metric,Euk
 
             MetricColumn = MetricOptions[Metric][0]
             
-            BaseExtractionStatement = "SELECT %s.%s,"%(PfamUIDTable,PfamAgeColumn)+"%s.%s,"%(pfamDataTable,MetricColumn)+"%s.%s,"%(pfamDataTable,PfamDataTableFilterColumn)+'%s.%s,'%(pfamDataTable,PfamDataTablePfamUIDColumn)+"%s.%s,"%(proteinDataTable,TransmembraneColumn)+"%s.%s"%(pfamDataTable,DomainLengthColumn)+" FROM "+pfamDataTable+" LEFT JOIN "+PfamUIDTable+" ON %s.%s=%s.%s"%(pfamDataTable,PfamDataTablePfamUIDColumn,PfamUIDTable,PfamUIDColumn)+ " LEFT JOIN "+proteinDataTable+" ON %s.%s=%s.%s"%(pfamDataTable,PfamDataTableProteinUIDColumn,proteinDataTable,UIDColumn) + " INNER JOIN "+uniqueTable + " ON %s.%s=%s.%s"%(pfamDataTable,PfamDataTableProteinUIDColumn,uniqueTable,UniqueProteinTableUID)
+            BaseExtractionStatement = "SELECT %s.%s,"%(PfamUIDTable,PfamAgeColumn)+"%s.%s,"%(pfamDataTable,MetricColumn)+"%s.%s,"%(pfamDataTable,PfamDataTableFilterColumn)+'%s.%s,'%(pfamDataTable,PfamDataTablePfamUIDColumn)+"%s.%s,"%(pfamDataTable,DomainTransmembraneColumn)+"%s.%s"%(pfamDataTable,DomainLengthColumn)+" FROM "+pfamDataTable+" LEFT JOIN "+PfamUIDTable+" ON %s.%s=%s.%s"%(pfamDataTable,PfamDataTablePfamUIDColumn,PfamUIDTable,PfamUIDColumn)+ " INNER JOIN "+uniqueTable + " ON %s.%s=%s.%s"%(pfamDataTable,PfamDataTableProteinUIDColumn,uniqueTable,UniqueProteinTableUID)
             DataTables[dataTable]['Extraction Statement'] = BaseExtractionStatement
             DataTables[dataTable]['Type'] = 'Pfam Table'
 
@@ -612,8 +616,8 @@ def CreateHomologyDictionary(MySQLResults,Transmembrane,Transformed,MetricOption
         AminoAcids = ['A','R','N','D','C','E','Q','G','H','O','I','L','K','M','F','P','U','S','T','W','Y','V']
         # We make sure we can parse the data appropriately
         if result != None and Metric != None and int(Filter) != int(False) and int(Length) > 0:
-            # And make the correct transmembrane choice 
-            if (Transmembrane == True and ExpAA != None and ExpAA > 18) or (Transmembrane == False and ExpAA != None and ExpAA <= 18) or Transmembrane == None:
+            # And make the correct transmembrane choice
+            if (Transmembrane == True and ExpAA != None and ExpAA > 18) or (Transmembrane == False and ExpAA != None and ExpAA <= 18) or Transmembrane == None or (Transmembrane == False and ExpAA != None and ExpAA <TransmembraneThresholdCutoff) or (Transmembrane == True and ExpAA != None and ExpAA >= TransmembraneThresholdCutoff):
                 # If we're looking at amino acid compositions, then we need a slightly different dictionary that contains
                 # the values for each amino acid stored in the tables, which are stored as comma-delimited strings
                 if MetricOption == 'aacomp':
