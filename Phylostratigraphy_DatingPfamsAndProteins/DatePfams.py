@@ -1,13 +1,7 @@
-import os, sys, json, csv, copy, mysql.connector
+import os, sys, json, csv, copy, mysql.connector, datetime
 from ete3 import Tree
 
 '''
-Author : Sara Willis
-Date   : February 11, 2019
---------------------------
-
-
-
 The purpose of this script is to assign dates to Pfams in our dataset.
 
 First, in order to aquire the various dates associated with the divergence of all species in our dataset, we uploaded the list of species in our dataset to TimeTree.org. The Newick file was then downloaded.
@@ -44,10 +38,12 @@ algorithm [2]: Used when only one species is present
 #      Input User-Specific Information Here      #
 ##################################################
 
+start_time = datetime.datetime.now()
+print('Script Executing\nCurrent Time: %s\n'%datetime.datetime.now())
 
 
 # MySQL connection information
-Database = ''
+Database = 'PFAMphylostratigraphy'
 User = ''
 Host = ''
 Password = ''
@@ -55,16 +51,21 @@ Password = ''
 # Data table where Pfams are stored
 PfamTable = 'PfamUIDsTable_EnsemblAndNCBI'
 
+# Column names in Pfam table
+PfamUIDColumn = 'PfamUID'
+SpeciesColumn = 'Species'
+FalseNegativeSpeciesColumn = 'Species_FalseNegatives'
+AgeColumn = 'Age_MY'
+
 # Newick tree used to date the pfams
 NewickTreeFilename = 'PhylogeneticTree_AllSpecies.nwk'
 
-
-
-
-
-
-
-
+# Paul has done a lot of work on searching all full genomes in all six reading frames
+# to determine which species are false negatives in our dataset. These species are stored
+# in the pfam table in the same format as the original species list but in a separate column.
+# The user has the option to include these in the dating of each domain by setting the following
+# option to True. To exclude them, set the option to False.
+IncludeFalseNegativeSpecies = True
 
 
 ##################################################
@@ -80,16 +81,24 @@ cnx = mysql.connector.connect(user = User,
                               host = Host,
                               database = Database)
 mycursor = cnx.cursor(buffered = True)
-PfamExtractionStatement = "SELECT UID,Species,NumberOfAssociatedSpecies FROM " + PfamTable
+
+
+PfamExtractionStatement = "SELECT "+','.join([PfamUIDColumn,SpeciesColumn,FalseNegativeSpeciesColumn])+" FROM " + PfamTable
 mycursor.execute(PfamExtractionStatement)
 pfamResults = mycursor.fetchall()
 
 # Each pfam is then analyzed so an age can be assigned to it.
 for pfam in pfamResults:
-    speciesList = pfam[1].split(',')
+    
     UID = pfam[0]
-    numberOfSpecies = pfam[2]
 
+    # The list of species each pfam shows up in is compiled depending on whether species flagged as false
+    # negatives will be included in the dating process
+    BaseSpeciesList = pfam[1].split(',')
+    FalseNegativeSpeciesList = pfam[2].split(',') if pfam[2] != None else []
+    speciesList = BaseSpeciesList + FalseNegativeSpeciesList if IncludeFalseNegativeSpecies == True else BaseSpeciesList
+    numberOfSpecies = len(speciesList)
+    
     # If more than one species exists for a particular pfam, then algorithm [1] is implemented (See: description in
     # the beginning of this script
     if numberOfSpecies != 1:
@@ -127,7 +136,11 @@ for pfam in pfamResults:
         species = t&speciesList[0]
         totalDistance = (species.dist)/2
     # We then update the age of a Pfam UID in our MySQL table.
-    AgeUpdateStatement = "UPDATE "+PfamTable+ " SET Age_MY=%.4f WHERE UID = %s"%(totalDistance,UID)
+    AgeUpdateStatement = "UPDATE "+PfamTable+ " SET "+AgeColumn+"=%.4f WHERE "%totalDistance+PfamUIDColumn+" = '%s'"%UID
     mycursor.execute(AgeUpdateStatement)
     cnx.commit()
 cnx.close()
+
+print('Script Complete\nTime Taken: %s'%(datetime.datetime.now()-start_time))
+sys.stdout.flush()
+
