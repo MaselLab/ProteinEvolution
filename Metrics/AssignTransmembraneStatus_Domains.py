@@ -33,7 +33,7 @@ The output value is the maximum fraction either of the ... and is calculated in 
 ####################################################################################
 
 # User-specific MySQL connection information
-Database = 'PFAMphylostratigraphy'
+Database = ''
 User     = ''
 Host     = ''
 Password = ''
@@ -41,9 +41,9 @@ Password = ''
 # The relevant tables where all data are stored. Multiple tables can be listed in comma-delimited format
 # The linked tables should all appear in the same position for each of the tables otherwise the data
 # will not be extracted correctly
-ProteinTables       = 'NCBIGenomes_Protein_Complete','Genomes_Multicellular_Protein'
-ProteinMetricTables = 'NCBIGenomes_ProteinMetrics_Complete','Genomes_Multicellular_ProteinMetrics'
-DomainMetricTables  = 'NCBIGenomes_DomainMetrics_Complete','Genomes_Multicellular_DomainMetrics'
+ProteinTables       = 'NCBIGenomes_Protein_Complete'#,'Genomes_Multicellular_Protein'
+ProteinMetricTables = 'NCBIGenomes_ProteinMetrics_Complete'#,'Genomes_Multicellular_ProteinMetrics'
+DomainMetricTables  = 'NCBIGenomes_DomainMetrics_Complete'#,'Genomes_Multicellular_DomainMetrics'
 
 # Column names where data are stored -- the column names should match in all tables listed above
 PfamStartColumn               = 'PfamStart'           # Protein Table
@@ -65,8 +65,15 @@ start_time = datetime.datetime.now()
 print('\nProgram Executing\nCalculating TmhmmTopology of Pfam Domains\nCurrent Time: %s\n'%start_time)
 sys.stdout.flush()
 
-# The tables are combined so they can be easily used together
-ZippedTables = zip(ProteinTables,ProteinMetricTables,DomainMetricTables)
+# to allow for the possibility that we're only updating one table instead of multiple,
+# we check to make sure our data are in the correct format
+if type(ProteinTables) == tuple:
+    # The tables are combined so they can be easily used together
+    ZippedTables = zip(ProteinTables,ProteinMetricTables,DomainMetricTables)
+# If not, we force them to be so the program can correctly execute
+else:
+    ZippedTables = [(ProteinTables,ProteinMetricTables,DomainMetricTables)]
+
 
 # A connection is established to the MySQL database
 cnx = mysql.connector.connect(user = User,
@@ -82,12 +89,13 @@ for Tables in ZippedTables:
     print('Extracting Data from %s'%','.join(Tables))
     # The relevant information to calculate the transmembrane status of each domain in
     # the database is pulled from the MySQL tables
-    ExtractionStatement = "SELECT protein."+PfamStartColumn+",protein."+PfamStopColumn+",protein."+PfamUIDsColumn+",pmetric."+TopologyColumn+" FROM "+ProteinTable+" AS protein INNER JOIN "+ProteinMetricsTable+" AS pmetric ON protein."+ProteinTableUIDColumn+"=pmetric."+ProteinMetricProteinUIDColumn+" WHERE protein.UID < 1000"
-    print('Data Successfully Extracted\nTime Taken: %s\n'%(datetime.datetime.now()-intermediate_time))
-    sys.stdout.flush()
+    ExtractionStatement = "SELECT protein."+PfamStartColumn+",protein."+PfamStopColumn+",protein."+PfamUIDsColumn+",pmetric."+TopologyColumn+" FROM "+ProteinTable+" AS protein INNER JOIN "+ProteinMetricsTable+" AS pmetric ON protein."+ProteinTableUIDColumn+"=pmetric."+ProteinMetricProteinUIDColumn#+" WHERE protein.UID < 1000"
+
     intermediate_time=datetime.datetime.now()
 
     mycursor.execute(ExtractionStatement)
+    print('Data Successfully Extracted\nTime Taken: %s\n'%(datetime.datetime.now()-intermediate_time))
+    sys.stdout.flush()
     results = mycursor.fetchall()
 
     # Each entry is specifically for a full  protein so nested loops are needed to analyze
