@@ -184,7 +184,11 @@ PfamDataTablePfamUIDColumn    = 'PfamUID'
 DomainLengthColumn            = 'DomainLength'
 DomainTransmembraneColumn     = 'TmhmmTopology'
 
-# This is the 
+# NOTE: This is for *domains only*
+# This is the minimum fractional score a domain needs to have to be counted as transmembrane.
+# See script "AssignTransmembraneStatus_Domains.py" in the Metrics directory to determine how
+# this value is calculated. Roughly speaking, it's the percentage of overlap between a domain
+# and a tmhmm-predicted helix.
 TransmembraneThresholdCutoff  = 0.5
 
 # Pfam UID Table
