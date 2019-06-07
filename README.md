@@ -1,6 +1,6 @@
 # ProteinEvolution
 
-This  is a common repository for submitting communal scripts used in studying protein evolution. 
+This is a repository for submitting communal scripts used in studying protein evolution. 
 
 ## Notes About This Repository
 ### Submitting Communal Scripts
