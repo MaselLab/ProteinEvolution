@@ -113,7 +113,7 @@ lambda=<x>        : Including the argument lambda writes to a file the value use
 -------------
 Domain Options    :  ISD, DensityOfAPRs, DensityOfAAsInAPRs, Clustering_Trunc, Clustering_AllFrames, Length, AAComp
      
-Kingdom Options   :  invertebrate, vertebrate, plant, fungi
+Kingdom Options   :  invertebrate, vertebrate, plant, fungi, animal
 
                                                             
 Metric Options    :  ISD, DensityOfAPRs, DensityOfAAsInAPRs, Length, AAComp
@@ -292,7 +292,7 @@ def About():
 
     print('-------------')
     print('{:<17}{:<3}{:<100}'.format('Domain Options',':','ISD, DensityOfAPRs, DensityOfAAsInAPRs, Clustering_Trunc, Clustering_AllFrames, Length, AAComp\n'))
-    print('{:<17}{:<3}{:<100}'.format('Kingdom Options',':','invertebrate, vertebrate, plant, fungi\n\n'))
+    print('{:<17}{:<3}{:<100}'.format('Kingdom Options',':','invertebrate, vertebrate, plant, fungi, animal\n\n'))
     print('{:<17}{:<3}{:<100}'.format('Metric Options',':','ISD, DensityOfAPRs, DensityOfAAsInAPRs, Length, AAComp,Clustering_Trunc, Clustering_AllFrames\n\n'))
     
     print('---------------------------------------- Data Transformation ---------------------------------------\n\n\n')
@@ -423,8 +423,13 @@ def ParseUserOptions(Arguments,filename_prefix):
 
     # The user may select specific kingdoms to analyze as a whole. This can only be used if a species UID hasn't been specified
     try:
+        ValidKingdoms = ['plant','invertebrate','vertebrate','fungi','animal']
         Kingdom = arguments['kingdom']
         filename_prefix += '_%s'%Kingdom
+        if Kingdom not in ValidKingdoms:
+            print('\n\n\u001b[31mInvalid kingdom.\nFor help use input option "h"\n\n\u001b[0m')
+            sys.exit(0)
+
         if SpeciesUID == None:
             print('\n{:<45}{:<5}{:<100}'.format('\u001b[36;1mKingdom selected','--',Kingdom))
         else:
@@ -580,11 +585,19 @@ def ConfigureExtractionStatement(SequenceType,Kingdom,SpeciesUID,Test,Metric,Euk
         # If a particular kingdom is desired, we only pull species from that kingdom
         elif Kingdom != None:
             if TableDesignation == 'Protein Table':
-                proteinTable = DataTables[dataTable][TableDesignation]
-                DataTables[dataTable]['Extraction Statement'] += " LEFT JOIN "+SpeciesTable+" ON %s.%s=%s.%s"%(SpeciesTable,SpeciesUIDColumn,proteinTable,FullGeneSpeciesUIDColumn) + " WHERE %s.%s"%(SpeciesTable,KingdomColumn) + " ='%s'"%Kingdom
+                if Kingdom != 'animal':
+                    proteinTable = DataTables[dataTable][TableDesignation]
+                    DataTables[dataTable]['Extraction Statement'] += " LEFT JOIN "+SpeciesTable+" ON %s.%s=%s.%s"%(SpeciesTable,SpeciesUIDColumn,proteinTable,FullGeneSpeciesUIDColumn) + " WHERE %s.%s"%(SpeciesTable,KingdomColumn) + " ='%s'"%Kingdom
+                else:
+                    proteinTable = DataTables[dataTable][TableDesignation]
+                    DataTables[dataTable]['Extraction Statement'] += " LEFT JOIN "+SpeciesTable+" ON %s.%s=%s.%s"%(SpeciesTable,SpeciesUIDColumn,proteinTable,FullGeneSpeciesUIDColumn) + " WHERE %s.%s"%(SpeciesTable,KingdomColumn) + " ='invertebrate' OR %s.%s"%(SpeciesTable,KingdomColumn) + "='vertebrate'"
             else:
-                pfamDataTable = DataTables[dataTable][TableDesignation]
-                DataTables[dataTable]['Extraction Statement'] += " LEFT JOIN "+SpeciesTable+" ON %s.%s=%s.%s"%(SpeciesTable,SpeciesUIDColumn,pfamDataTable,PfamSpeciesUIDColumn) + " WHERE %s.%s"%(SpeciesTable,KingdomColumn) + " ='%s'"%Kingdom
+                if Kingdom != 'animal':
+                    pfamDataTable = DataTables[dataTable][TableDesignation]
+                    DataTables[dataTable]['Extraction Statement'] += " LEFT JOIN "+SpeciesTable+" ON %s.%s=%s.%s"%(SpeciesTable,SpeciesUIDColumn,pfamDataTable,PfamSpeciesUIDColumn) + " WHERE %s.%s"%(SpeciesTable,KingdomColumn) + " ='%s'"%Kingdom
+                else:
+                    pfamDataTable = DataTables[dataTable][TableDesignation]
+                    DataTables[dataTable]['Extraction Statement'] += " LEFT JOIN "+SpeciesTable+" ON %s.%s=%s.%s"%(SpeciesTable,SpeciesUIDColumn,pfamDataTable,PfamSpeciesUIDColumn) + " WHERE %s.%s"%(SpeciesTable,KingdomColumn) + " ='invertebrate' OR %s.%s"%(SpeciesTable,KingdomColumn) +"='vertebrate'"
         # If Test is specified, then we only pull the first thousand rows from each data table
         elif Test != False:
             if TableDesignation == 'Protein Table':
